@@ -23,12 +23,13 @@
   --cobalt:#1c3be0; --yellow:#ffe27a; --navy:#0b1230;
   --paper:#f4f6fb; --ink:#0b1230; --muted:#4a5372; --line:rgba(11,18,48,.16);
   --pad:clamp(1.25rem,5vw,4rem);
+  --nav-h:4.25rem;
 }
 @media (prefers-color-scheme:dark){
   :root{--paper:#0a1024; --ink:#eef1ff; --muted:#a5aed0; --line:rgba(238,241,255,.16)}
 }
 *{box-sizing:border-box;margin:0}
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;scroll-padding-top:var(--nav-h)}
 body{font-family:'Bricolage Grotesque',system-ui,-apple-system,'Segoe UI',sans-serif;background:var(--paper);color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased}
 a{color:inherit}
 ul{list-style:none;padding:0}
@@ -47,16 +48,20 @@ section{padding:clamp(4rem,10vw,8rem) var(--pad)}
 .btn.fill:hover{background:#fff;border-color:#fff}
 .btn.ghost:hover{background:#fff;border-color:#fff;color:var(--cobalt)}
 
-/* Hero */
-.hero{min-height:100svh;padding:1.25rem var(--pad) var(--pad);display:flex;flex-direction:column}
-.hero .wrap{width:100%;flex:1;display:flex;flex-direction:column}
-nav{display:flex;justify-content:space-between;align-items:center;gap:.75rem 1.5rem;flex-wrap:wrap}
+/* Sticky top bar */
+.site-nav{position:sticky;top:0;z-index:100;height:var(--nav-h);padding:0 var(--pad);border-bottom:1px solid rgba(255,255,255,.22)}
+.site-nav .wrap{height:100%}
+nav{display:flex;justify-content:space-between;align-items:center;gap:.75rem 1.5rem;height:100%}
 .mark{font-weight:800;font-size:1.5rem;letter-spacing:-.03em;text-decoration:none}
 .mark i{display:inline-block;width:.32em;height:.32em;margin-left:.1em;background:var(--yellow);border-radius:50%}
 nav ul{display:flex;align-items:center;gap:clamp(.9rem,3vw,2.25rem)}
 nav ul a:not(.btn){text-decoration:none;font-weight:500}
 nav ul a:not(.btn):hover{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:6px}
 nav .btn{padding:.5rem 1.1rem}
+
+/* Hero */
+.hero{min-height:calc(100svh - var(--nav-h));padding:1.25rem var(--pad) var(--pad);display:flex;flex-direction:column}
+.hero .wrap{width:100%;flex:1;display:flex;flex-direction:column}
 .hero h1{margin-top:auto;padding-top:3rem;font-weight:800;font-size:clamp(4.5rem,19vw,15rem);line-height:.86;letter-spacing:-.045em}
 .hero h1 .l{display:block;overflow:hidden;padding-bottom:.06em}
 .hero h1 .l span{display:inline-block;animation:rise .9s cubic-bezier(.2,.8,.2,1) both}
@@ -98,6 +103,11 @@ footer{margin-top:clamp(3rem,8vw,6rem);padding-top:1.5rem;border-top:1px solid r
   .row{grid-template-columns:1fr}
   .row .tags{text-align:left}
 }
+@media (max-width:520px){
+  .mark{font-size:1.3rem}
+  nav ul{gap:.7rem;font-size:.95rem}
+  nav .btn{padding:.4rem .85rem}
+}
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
   .hero h1 .l span{animation:none}
@@ -105,9 +115,9 @@ footer{margin-top:clamp(3rem,8vw,6rem);padding-top:1.5rem;border-top:1px solid r
 }
 </style>
 </head>
-<body>
+<body id="top">
 
-<header class="blue hero">
+<header class="site-nav blue">
   <div class="wrap">
     <nav aria-label="Main">
       <a class="mark" href="#top" aria-label="Samuel Horner, back to top">SH<i></i></a>
@@ -119,8 +129,12 @@ footer{margin-top:clamp(3rem,8vw,6rem);padding-top:1.5rem;border-top:1px solid r
         <li><a class="btn ghost" href="#">Resume</a></li>
       </ul>
     </nav>
+  </div>
+</header>
 
-    <h1 id="top" aria-label="Samuel Horner">
+<div class="blue hero">
+  <div class="wrap">
+    <h1 aria-label="Samuel Horner">
       <span class="l" aria-hidden="true"><span>Samuel</span></span>
       <span class="l" aria-hidden="true"><span>Horner<span class="dot">.</span></span></span>
     </h1>
@@ -137,7 +151,7 @@ footer{margin-top:clamp(3rem,8vw,6rem);padding-top:1.5rem;border-top:1px solid r
       </div>
     </div>
   </div>
-</header>
+</div>
 
 <main>
   <section id="about">
