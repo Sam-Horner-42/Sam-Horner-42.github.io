@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Blasteroids | Samuel Horner</title>
+<meta name="description" content="An endless PICO-8 shoot 'em up with original pixel art and music. Playable in the browser.">
+<meta name="theme-color" content="#1c3be0">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231c3be0'/%3E%3Ccircle cx='23' cy='23' r='4' fill='%23ffe27a'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body id="top">
+
+<header class="site-nav blue">
+  <div class="wrap">
+    <nav aria-label="Main">
+      <a class="mark" href="../index.html" aria-label="Samuel Horner, home">SH<i></i></a>
+      <ul>
+        <li><a href="../index.html#about">About</a></li>
+        <li><a href="../index.html#projects">Projects</a></li>
+        <li><a href="../index.html#contact">Contact</a></li>
+        <li><a class="btn ghost" href="../data/Samuel Horner - Resume - 2026.pdf">Resume</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<div class="blue p-hero">
+  <div class="wrap">
+    <a class="back" href="../index.html#games">← All projects</a>
+    <p class="eyebrow">Game · Solo project</p>
+    <h1>Blasteroids<span class="dot">.</span></h1>
+    <p class="summary">An endless space shoot 'em up for the PICO-8 fantasy console. Dodge asteroid fields, blast them apart and collect gems while chasing a high score. I made every sprite and every piece of music myself.</p>
+    <div class="cta">
+      <a class="btn fill" href="https://skwidge.itch.io/blasteroids">Play in your browser</a>
+    </div>
+    <dl class="facts">
+      <div><dt>Role</dt><dd>Solo: design, art, music</dd></div>
+      <div><dt>Platform</dt><dd>PICO-8 · HTML5</dd></div>
+      <div><dt>Language</dt><dd>Lua</dd></div>
+      <div><dt>Timeline</dt><dd>Several months</dd></div>
+    </dl>
+  </div>
+</div>
+
+<main class="p-body">
+  <section>
+    <div class="wrap grid">
+      <h2>Screenshots</h2>
+      <div class="gallery">
+        <figure><a href="../images/blasteroids/shot-1.png"><img class="pixel" src="../images/blasteroids/shot-1.png" width="384" height="384" alt="Player ship firing at the top of the screen under a flashing 'Warning: asteroid field incoming' banner" loading="lazy"></a></figure>
+        <figure><a href="../images/blasteroids/shot-2.png"><img class="pixel" src="../images/blasteroids/shot-2.png" width="384" height="384" alt="Ship earning +100 points after destroying an asteroid, with a gem floating nearby" loading="lazy"></a></figure>
+        <figure><a href="../images/blasteroids/shot-3.png"><img class="pixel" src="../images/blasteroids/shot-3.png" width="384" height="384" alt="Twin blaster shots breaking up an asteroid field" loading="lazy"></a></figure>
+        <figure><a href="../images/blasteroids/shot-4.png"><img class="pixel" src="../images/blasteroids/shot-4.png" width="384" height="384" alt="Dodging red enemy fire among drifting asteroids" loading="lazy"></a></figure>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap grid">
+      <h2>Overview</h2>
+      <div class="prose">
+        <p class="lead">No win screen. Just you, your ship and an endless asteroid field.</p>
+        <p>Blasteroids is built for <strong>PICO-8</strong>, a fantasy console with tight, deliberate limits: a 128×128 screen, a 16-colour palette and a small cap on code size. Working inside those limits means every sprite, sound and line of code has to earn its place.</p>
+        <p>There is no winning condition. The goal is to survive as long as possible and beat your best score.</p>
+        <div class="controls" aria-label="Controls">
+          <span><kbd>← ↑ → ↓</kbd>Move</span>
+          <span><kbd>X</kbd>Shoot</span>
+          <span><kbd>Z</kbd>Rocket attack</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap grid">
+      <h2>Highlights</h2>
+      <ul class="features">
+        <li><h3>Original pixel art</h3><p>I drew every sprite, from the player ship to the asteroids and gems, within PICO-8's fixed palette.</p></li>
+        <li><h3>Original soundtrack</h3><p>I composed all music and sound effects in PICO-8's built-in tracker.</p></li>
+        <li><h3>Endless score attack</h3><p>Asteroid fields and gem pickups keep runs replayable and competitive.</p></li>
+        <li><h3>Three weapons</h3><p>A rapid-fire blaster is backed by a limited stock of rockets and a laser pickup for when things get crowded.</p></li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap grid">
+      <h2>How it was made</h2>
+      <div class="prose">
+        <p>I handled the game design, all visual assets and all audio. I used AI assistance to help write the Lua gameplay code, and I integrated, tested and tuned that code within PICO-8's constraints.</p>
+        <p>The game proved too easy with 10 hearts so I lowered the health and added the shield mechanic. The sound effects and music took weeks of fine tuning.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<a class="next" href="cookie-conquest.html">
+  <div class="wrap"><small>Next project</small><b>Cookie Conquest</b></div>
+</a>
+
+<footer class="site-foot blue">
+  <div class="wrap"><span>&copy; 2026 Samuel Horner</span><a href="mailto:samuelhorner123@gmail.com">samuelhorner123@gmail.com</a></div>
+</footer>
+</body>
+</html>

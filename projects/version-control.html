@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Version Control System | Samuel Horner</title>
+<meta name="description" content="A Git-like version control engine with a Qt desktop GUI, built in C++17 by a team of five.">
+<meta name="theme-color" content="#1c3be0">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231c3be0'/%3E%3Ccircle cx='23' cy='23' r='4' fill='%23ffe27a'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body id="top">
+
+<header class="site-nav blue">
+  <div class="wrap">
+    <nav aria-label="Main">
+      <a class="mark" href="../index.html" aria-label="Samuel Horner, home">SH<i></i></a>
+      <ul>
+        <li><a href="../index.html#about">About</a></li>
+        <li><a href="../index.html#projects">Projects</a></li>
+        <li><a href="../index.html#contact">Contact</a></li>
+        <li><a class="btn ghost" href="../data/Samuel Horner - Resume - 2026.pdf">Resume</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<div class="blue p-hero">
+  <div class="wrap">
+    <a class="back" href="../index.html#projects">← All projects</a>
+    <p class="eyebrow">Academic project · Team of 5</p>
+    <h1>Git-like Version Control<span class="dot">.</span></h1>
+    <p class="summary">A local version control engine with a Qt desktop interface. It covers repository setup, file hashing, line-by-line diffs and commit history, written in modern C++.</p>
+    <div class="cta">
+      <a class="btn fill" href="https://github.com/Sam-Horner-42/CPPMiniVersionControl">View source on GitHub</a>
+    </div>
+    <dl class="facts">
+      <div><dt>Role</dt><dd>Software Architect and UI Developer</dd></div>
+      <div><dt>Team</dt><dd>5 developers</dd></div>
+      <div><dt>Stack</dt><dd>C++17 · Qt · CMake</dd></div>
+      <div><dt>Scale</dt><dd>147 commits</dd></div>
+    </dl>
+  </div>
+</div>
+
+<main class="p-body">
+  <section>
+    <div class="wrap grid">
+      <h2>Overview</h2>
+      <div class="prose">
+        <p class="lead">What happens when you type <code>git commit</code>? We built our own to find out.</p>
+        <p>This is a lightweight version control system in the style of Git. It tracks changes to files in a local repository and stores snapshots as commits. Users can inspect exactly what changed between revisions.</p>
+        <p>The engine is written in <strong>C++17</strong> and kept separate from the <strong>Qt</strong> desktop interface. That separation let five people work on the core logic and the GUI at the same time without blocking each other.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap grid">
+      <h2>Highlights</h2>
+      <ul class="features">
+        <li><h3>Repository lifecycle</h3><p>Initialise a repository and manage its local tracking structures, including the object store, commit log and HEAD state.</p></li>
+        <li><h3>Cryptographic hashing</h3><p>Files are hashed to detect changes and verify integrity. Identical content is recognised without comparing whole files.</p></li>
+        <li><h3>Line-by-line diffs</h3><p>A diff engine compares the working directory against stored snapshots and reports additions and removals line by line.</p></li>
+        <li><h3>Commit history</h3><p>Sequential commits record the author, timestamp and message, and can be browsed as a revision log.</p></li>
+        <li><h3>Qt desktop GUI</h3><p>Repository views, a commit log and a diff inspector, so the whole workflow runs without a terminal.</p></li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap grid">
+      <h2>Architecture</h2>
+      <div>
+        <div class="layers" role="list" aria-label="System layers, top to bottom">
+          <div class="layer" role="listitem"><b>Qt GUI application</b><ul><li>Repository view</li><li>Commit log</li><li>Diff inspector</li><li>Staging controls</li></ul></div>
+          <div class="layer" role="listitem"><b>Core engine</b><ul><li>Repository manager</li><li>Hash engine</li><li>Diff engine</li></ul></div>
+          <div class="layer" role="listitem"><b>Local storage &amp; index</b><ul><li>Object database</li><li>Commit logs</li><li>HEAD state</li></ul></div>
+        </div>
+        <p class="caption">Three decoupled layers. The GUI only talks to the core engine, and only the engine touches storage, so each layer can be tested and changed on its own.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap grid">
+      <h2>My contribution</h2>
+      <div class="prose">
+
+        <p>The entire GUI was written by me and designed in the QT editor.
+            Over 100 tests were conducted on my machine to verify the versioning system worked.
+            The file watching system was included and utilized by me to understand when a file had been modified so the repository could be updated.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap grid">
+      <h2>What I learned</h2>
+      <div class="prose">
+
+        <p>More than anything I learned how to work more effectively in a team setting.
+            I know now that defining the structure of a project beforehand is very important.
+            Defining multiple branches to avoid merge conflicts is very important.
+            I learned how much I enjoy coding in C++.
+            C++ dynamic and static casting are two of the most powerful things I have seen in any language.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap grid">
+      <h2>Build it</h2>
+      <div class="prose">
+        <p>Requires a C++17 compiler (GCC 9+, Clang 10+ or MSVC 2019+), Qt 5.15+ or 6.x, and CMake 3.16+.</p>
+<pre><code>git clone https://github.com/Sam-Horner-42/CPPMiniVersionControl.git
+cd CPPMiniVersionControl
+mkdir build &amp;&amp; cd build
+cmake .. &amp;&amp; cmake --build .</code></pre>
+      </div>
+    </div>
+  </section>
+</main>
+
+<a class="next" href="stelline-compiler.html">
+  <div class="wrap"><small>Next project</small><b>Stelline Compiler</b></div>
+</a>
+
+<footer class="site-foot blue">
+  <div class="wrap"><span>&copy; 2026 Samuel Horner</span><a href="mailto:samuelhorner123@gmail.com">samuelhorner123@gmail.com</a></div>
+</footer>
+</body>
+</html>

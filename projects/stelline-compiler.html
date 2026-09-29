@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stelline Compiler | Samuel Horner</title>
+<meta name="description" content="A modular compiler front-end for the Stelline language, written in ANSI C with no external dependencies.">
+<meta name="theme-color" content="#1c3be0">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231c3be0'/%3E%3Ccircle cx='23' cy='23' r='4' fill='%23ffe27a'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body id="top">
+
+<header class="site-nav blue">
+  <div class="wrap">
+    <nav aria-label="Main">
+      <a class="mark" href="../index.html" aria-label="Samuel Horner, home">SH<i></i></a>
+      <ul>
+        <li><a href="../index.html#about">About</a></li>
+        <li><a href="../index.html#projects">Projects</a></li>
+        <li><a href="../index.html#contact">Contact</a></li>
+        <li><a class="btn ghost" href="../data/Samuel Horner - Resume - 2026.pdf">Resume</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<div class="blue p-hero">
+  <div class="wrap">
+    <a class="back" href="../index.html#projects">← All projects</a>
+    <p class="eyebrow">Academic project · Compilers</p>
+    <h1>Stelline Compiler<span class="dot">.</span></h1>
+    <p class="summary">A compiler front-end for the Stelline programming language. It turns raw source text into tokens and checks them against the language grammar, and it is written in plain ANSI C with no external libraries.</p>
+    <div class="cta">
+      <a class="btn fill" href="https://github.com/Sam-Horner-42/A1Compilers">View source on GitHub</a>
+    </div>
+    <dl class="facts">
+      <div><dt>Role</dt><dd>Solo Developer</dd></div>
+      <div><dt>Language</dt><dd>ANSI C</dd></div>
+      <div><dt>Dependencies</dt><dd>None, standard library only</dd></div>
+      <div><dt>Builds with</dt><dd>GCC · Clang · MSVC</dd></div>
+    </dl>
+  </div>
+</div>
+
+<main class="p-body">
+  <section>
+    <div class="wrap grid">
+      <h2>Overview</h2>
+      <div class="prose">
+        <p class="lead">Three stages that take a program from characters to a checked syntax tree.</p>
+        <p>Stelline is a small, type-safe teaching language. This project implements its compiler <strong>front-end</strong>. It reads source files efficiently, splits them into typed tokens and confirms that the token stream follows the grammar. Any error is reported with its exact line and character position.</p>
+        <p>The code uses only <code>stdio.h</code>, <code>stdlib.h</code> and <code>string.h</code>. There is no parser generator and no lexer library, so every stage is written by hand, including memory management.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap grid">
+      <h2>Pipeline</h2>
+      <div>
+        <div class="flow" role="list" aria-label="Compiler pipeline">
+          <div class="step io" role="listitem"><small>Input</small><b>Source file</b><span>Stelline program text</span></div>
+          <span class="arrow" aria-hidden="true">→</span>
+          <div class="step" role="listitem"><small>buffer.c</small><b>Buffer reader</b><span>Growable input stream with rollback &amp; retract</span></div>
+          <span class="arrow" aria-hidden="true">→</span>
+          <div class="step" role="listitem"><small>scanner.c</small><b>Lexical analyser</b><span>Transition-table finite state automaton</span></div>
+          <span class="arrow" aria-hidden="true">→</span>
+          <div class="step" role="listitem"><small>parser.c</small><b>Syntax parser</b><span>Top-down parser for an EBNF grammar</span></div>
+          <span class="arrow" aria-hidden="true">→</span>
+          <div class="step io" role="listitem"><small>Output</small><b>Diagnostics</b><span>Line and character error locations</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap grid">
+      <h2>Highlights</h2>
+      <ul class="features">
+        <li><h3>Configurable buffer</h3><p>Manages the input stream under three growth policies. It supports rollback and retract so the scanner can look ahead and back up.</p></li>
+        <li><h3>Table-driven lexer</h3><p>A finite state automaton driven by a transition table turns characters into typed tokens and traps malformed input.</p></li>
+        <li><h3>Recursive-descent parser</h3><p>A top-down parser checks the token stream against Stelline's context-free grammar, which is specified in EBNF.</p></li>
+        <li><h3>Precise errors</h3><p>Diagnostics report the exact line and character, so a malformed program points you straight to the problem.</p></li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap grid">
+      <h2>Buffer design</h2>
+      <div class="prose">
+        <p>The buffer can grow in three ways, chosen by a mode flag. Each one trades memory against the number of reallocations:</p>
+        <table class="spec">
+          <thead><tr><th>Mode</th><th>Flag</th><th>Behaviour</th></tr></thead>
+          <tbody>
+            <tr><td>Fixed</td><td><code>'f'</code></td><td>Static capacity. Rejects input at the limit.</td></tr>
+            <tr><td>Additive</td><td><code>'a'</code></td><td>Grows linearly by a fixed increment.</td></tr>
+            <tr><td>Multiplicative</td><td><code>'m'</code></td><td>Grows exponentially by a factor, so appends have amortised O(1) cost.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap grid">
+      <h2>My contribution</h2>
+      <div class="prose">
+        <p>This was a solo project that I wrote to help me better understand the compilation process. The parser was by far the hardest aspect of this project.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap grid">
+      <h2>What I learned</h2>
+      <div class="prose">
+        <p>By far the hardest part of this compiler was defining the transition table. It took likely over 100 failed compilations before the final version was reached.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap grid">
+      <h2>Build it</h2>
+      <div class="prose">
+<pre><code><span class="c"># with make</span>
+make
+
+<span class="c"># or compile directly</span>
+gcc -Wall -Wextra -std=c11 -Iinclude src/*.c -o stelline_compiler</code></pre>
+      </div>
+    </div>
+  </section>
+</main>
+
+<a class="next" href="blasteroids.html">
+  <div class="wrap"><small>Next project</small><b>Blasteroids</b></div>
+</a>
+
+<footer class="site-foot blue">
+  <div class="wrap"><span>&copy; 2026 Samuel Horner</span><a href="mailto:samuelhorner123@gmail.com">samuelhorner123@gmail.com</a></div>
+</footer>
+</body>
+</html>

@@ -11,109 +11,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,800&display=swap" rel="stylesheet">
 
-<!--
-  QUICK EDIT GUIDE
-  - Search this file for "EDIT" to find every placeholder: bio, skills, projects, email, social links.
-  - Every link below is a real <a href>. Point href at a new page (e.g. projects/my-app.html),
-    a section (#projects), a PDF, or an external URL whenever you add features.
--->
 
-<style>
-:root{
-  --cobalt:#1c3be0; --yellow:#ffe27a; --navy:#0b1230;
-  --paper:#f4f6fb; --ink:#0b1230; --muted:#4a5372; --line:rgba(11,18,48,.16);
-  --pad:clamp(1.25rem,5vw,4rem);
-  --nav-h:4.25rem;
-}
-@media (prefers-color-scheme:dark){
-  :root{--paper:#0a1024; --ink:#eef1ff; --muted:#a5aed0; --line:rgba(238,241,255,.16)}
-}
-*{box-sizing:border-box;margin:0}
-html{scroll-behavior:smooth;scroll-padding-top:var(--nav-h)}
-body{font-family:'Bricolage Grotesque',system-ui,-apple-system,'Segoe UI',sans-serif;background:var(--paper);color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased}
-a{color:inherit}
-ul{list-style:none;padding:0}
-:focus-visible{outline:3px solid var(--ink);outline-offset:4px;border-radius:2px}
-.blue :focus-visible{outline-color:var(--yellow)}
-
-/* Shared */
-.blue{background:var(--cobalt);color:#fff}
-.wrap{max-width:1200px;margin:0 auto}
-section{padding:clamp(4rem,10vw,8rem) var(--pad)}
-.grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,3.2fr);gap:2rem 4rem}
-.grid>h2{font-size:1.1rem;font-weight:500;color:var(--muted)}
-.blue .grid>h2{color:rgba(255,255,255,.78)}
-.btn{display:inline-block;padding:.8rem 1.5rem;border-radius:999px;font-weight:500;text-decoration:none;border:2px solid currentColor;transition:background .2s,color .2s,border-color .2s}
-.btn.fill{background:var(--yellow);border-color:var(--yellow);color:var(--navy)}
-.btn.fill:hover{background:#fff;border-color:#fff}
-.btn.ghost:hover{background:#fff;border-color:#fff;color:var(--cobalt)}
-
-/* Sticky top bar */
-.site-nav{position:sticky;top:0;z-index:100;height:var(--nav-h);padding:0 var(--pad);border-bottom:1px solid rgba(255,255,255,.22)}
-.site-nav .wrap{height:100%}
-nav{display:flex;justify-content:space-between;align-items:center;gap:.75rem 1.5rem;height:100%}
-.mark{font-weight:800;font-size:1.5rem;letter-spacing:-.03em;text-decoration:none}
-.mark i{display:inline-block;width:.32em;height:.32em;margin-left:.1em;background:var(--yellow);border-radius:50%}
-nav ul{display:flex;align-items:center;gap:clamp(.9rem,3vw,2.25rem)}
-nav ul a:not(.btn){text-decoration:none;font-weight:500}
-nav ul a:not(.btn):hover{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:6px}
-nav .btn{padding:.5rem 1.1rem}
-
-/* Hero */
-.hero{min-height:calc(100svh - var(--nav-h));padding:1.25rem var(--pad) var(--pad);display:flex;flex-direction:column}
-.hero .wrap{width:100%;flex:1;display:flex;flex-direction:column}
-.hero h1{margin-top:auto;padding-top:3rem;font-weight:800;font-size:clamp(4.5rem,19vw,15rem);line-height:.86;letter-spacing:-.045em}
-.hero h1 .l{display:block;overflow:hidden;padding-bottom:.06em}
-.hero h1 .l span{display:inline-block;animation:rise .9s cubic-bezier(.2,.8,.2,1) both}
-.hero h1 .l:nth-child(2) span{animation-delay:.12s}
-.hero h1 .dot{color:var(--yellow)}
-@keyframes rise{from{transform:translateY(105%)}}
-.hero-foot{display:flex;justify-content:space-between;align-items:flex-end;gap:1.5rem 2rem;flex-wrap:wrap;margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,.35)}
-.status{display:flex;align-items:center;gap:.6rem;font-weight:500;margin-bottom:.6rem}
-.status::before{content:"";width:.6rem;height:.6rem;border-radius:50%;background:var(--yellow)}
-.hero-foot p{max-width:40ch;font-size:clamp(1.05rem,1.6vw,1.3rem);color:rgba(255,255,255,.9)}
-.hero-foot .cta{display:flex;gap:.75rem;flex-wrap:wrap}
-
-/* About */
-.lead{font-size:clamp(1.75rem,4vw,3.25rem);line-height:1.12;letter-spacing:-.025em;font-weight:500;max-width:26ch}
-.about-text{margin-top:1.75rem;max-width:58ch;color:var(--muted);font-size:1.1rem}
-.skills{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:2rem 3rem;margin-top:3.5rem}
-.skills h3{font-size:1rem;font-weight:500;color:var(--muted);margin-bottom:.5rem}
-.skills li{padding:.6rem 0;border-top:1px solid var(--line)}
-
-/* Projects */
-.row{display:grid;grid-template-columns:1.1fr 1.5fr auto;gap:.75rem 2rem;align-items:baseline;padding:1.75rem 1rem;border-top:1px solid var(--line);text-decoration:none;transition:background .2s,color .2s,padding .2s}
-.list .row:last-child{border-bottom:1px solid var(--line)}
-.row h3{font-size:clamp(1.5rem,2.6vw,2.25rem);font-weight:800;letter-spacing:-.02em;line-height:1.1}
-.row p,.row .tags{color:var(--muted)}
-.row .tags{font-size:.95rem;text-align:right}
-.row:hover,.row:focus-visible{background:var(--cobalt);color:#fff;padding-inline:1.5rem}
-.row:hover p,.row:hover .tags,.row:focus-visible p,.row:focus-visible .tags{color:rgba(255,255,255,.9)}
-.row:focus-visible{outline-offset:-4px;outline-color:var(--yellow)}
-
-/* Contact */
-.big{font-size:clamp(1.5rem,3vw,2.25rem);font-weight:500;line-height:1.2;max-width:24ch;letter-spacing:-.02em}
-.email{display:inline-block;margin-top:1.5rem;font-size:clamp(1.75rem,6vw,5rem);font-weight:800;letter-spacing:-.035em;line-height:1.05;overflow-wrap:anywhere;text-decoration:underline;text-decoration-color:var(--yellow);text-decoration-thickness:.07em;text-underline-offset:.12em}
-.email:hover{text-decoration-color:#fff}
-.social{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:2.5rem}
-footer{margin-top:clamp(3rem,8vw,6rem);padding-top:1.5rem;border-top:1px solid rgba(255,255,255,.35);color:rgba(255,255,255,.78);font-size:.95rem}
-
-@media (max-width:760px){
-  .grid{grid-template-columns:1fr}
-  .row{grid-template-columns:1fr}
-  .row .tags{text-align:left}
-}
-@media (max-width:520px){
-  .mark{font-size:1.3rem}
-  nav ul{gap:.7rem;font-size:.95rem}
-  nav .btn{padding:.4rem .85rem}
-}
-@media (prefers-reduced-motion:reduce){
-  html{scroll-behavior:auto}
-  .hero h1 .l span{animation:none}
-  .row{transition:none}
-}
-</style>
+<link rel="stylesheet" href="css/style.css">
 </head>
 <body id="top">
 
@@ -125,7 +24,6 @@ footer{margin-top:clamp(3rem,8vw,6rem);padding-top:1.5rem;border-top:1px solid r
         <li><a href="#about">About</a></li>
         <li><a href="#projects">Projects</a></li>
         <li><a href="#contact">Contact</a></li>
-        <!-- EDIT: point this at your resume, e.g. assets/Samuel-Horner-Resume.pdf -->
         <li><a class="btn ghost" href="data/Samuel Horner - Resume - 2026.pdf">Resume</a></li>
       </ul>
     </nav>
@@ -141,9 +39,9 @@ footer{margin-top:clamp(3rem,8vw,6rem);padding-top:1.5rem;border-top:1px solid r
 
     <div class="hero-foot">
       <div>
-        <!-- EDIT: update your availability and one-line pitch -->
+
         <div class="status">Open to new opportunities</div>
-        <p>I design and build clear, dependable software, from the first idea to a finished product.</p>
+        <p>I most enjoy low-level languages like C and C++ and love fine tuning my work until it's perfect.</p>
       </div>
       <div class="cta">
         <a class="btn fill" href="#projects">View projects</a>
@@ -158,22 +56,22 @@ footer{margin-top:clamp(3rem,8vw,6rem);padding-top:1.5rem;border-top:1px solid r
     <div class="wrap grid">
       <h2>About</h2>
       <div>
-        <!-- EDIT: replace with your own statement and bio -->
-        <p class="lead">I build things that are simple to use and solid underneath.</p>
-        <p class="about-text">Currently pursuing my Computer Engineering Technology - Computing Science diploma at Algonquin college. 
+        <p class="lead">I strive to make things that I am proud of and have a real impact in the world.</p>
+        <p class="about-text">Currently pursuing my Computer Engineering Technology - Computing Science diploma at Algonquin college.
           I am very invested in programming, embedded systems and computer systems mathematics as well as volunteer work.</p>
 
         <div class="skills">
           <div>
             <h3>Languages</h3>
-            <!-- EDIT: your skills -->
             <ul>
-              <li>C++</li>
-              <li>Java</li>
-              <li>C</li>
-              <li>HTML &amp; CSS</li>
-              <li>PHP</li>
-              <li>SQL</li>
+                <li>C</li>
+                <li>C++</li>
+                <li>C#</li>
+                <li>Java</li>
+                <li>HTML &amp; CSS</li>
+                <li>PHP</li>
+                <li>SQL</li>
+                <li>Lua</li>
             </ul>
           </div>
           <div>
@@ -183,6 +81,7 @@ footer{margin-top:clamp(3rem,8vw,6rem);padding-top:1.5rem;border-top:1px solid r
               <li>Visual Studio &amp; Visual Studio Code</li>
               <li>Windows &amp; Linux</li>
               <li>REST APIs</li>
+              <li>Godot, Love2D &amp Pico8</li>
             </ul>
           </div>
         </div>
@@ -194,18 +93,18 @@ footer{margin-top:clamp(3rem,8vw,6rem);padding-top:1.5rem;border-top:1px solid r
     <div class="wrap grid">
       <h2>Academic Projects</h2>
       <div class="list">
-        <!-- EDIT: each row is one project. Change href to a project page or live URL. Copy a row to add more. -->
-        <a class="row" href="https://github.com/Sam-Horner-42/CPPMiniVersionControl">
+
+        <a class="row" href="projects/version-control.html">
           <h3>Git-like Version Control System</h3>
           <p>A local version control system designed for Windows co-authored in a group of 5.</p>
           <span class="tags">C++ &amp; QT</span>
         </a>
-        <a class="row" href="https://github.com/Sam-Horner-42/A1Compilers">
+        <a class="row" href="projects/stelline-compiler.html">
           <h3>Stelline Compiler</h3>
           <p>A type-safe compiler written in C.</p>
           <span class="tags">C</span>
         </a>
-       
+
       </div>
     </div>
   </section>
@@ -214,18 +113,18 @@ footer{margin-top:clamp(3rem,8vw,6rem);padding-top:1.5rem;border-top:1px solid r
     <div class="wrap grid">
       <h2>Games</h2>
       <div class="list">
-        <!-- EDIT: each row is one project. Change href to a project page or live URL. Copy a row to add more. -->
-        <a class="row" href="https://skwidge.itch.io/blasteroids">
+
+        <a class="row" href="projects/blasteroids.html">
           <h3>Blasteroids</h3>
           <p>A shoot em' up. All music and assets were created entirely by me. AI was used to help develop the Lua code.</p>
           <span class="tags">Lua &amp; Pico8</span>
         </a>
-        <a class="row" href="https://fabe-da-babe.itch.io/cookie-conquest">
+        <a class="row" href="projects/cookie-conquest.html">
           <h3>Cookie Conquest</h3>
           <p>A game co-authored in a group of 3 for a game jam. The code was written entirely in Java.</p>
           <span class="tags">Java</span>
         </a>
-        
+
       </div>
     </div>
   </section>
@@ -237,10 +136,10 @@ footer{margin-top:clamp(3rem,8vw,6rem);padding-top:1.5rem;border-top:1px solid r
       <h2>Contact</h2>
       <div>
         <p class="big">Have a role or project in mind? Let's talk.</p>
-        <!-- EDIT: your email -->
+
         <a class="email" href="mailto:samuelhorner123@gmail.com">samuelhorner123@gmail.com</a>
         <ul class="social">
-          <!-- EDIT: your profile URLs -->
+
           <li><a class="btn ghost" href="https://github.com/sam-horner-42">GitHub</a></li>
           <li><a class="btn ghost" href="https://www.linkedin.com/in/sam-horner-cet">LinkedIn</a></li>
           <li><a class="btn ghost" href="data/Samuel Horner - Resume - 2026.pdf">Resume</a></li>
