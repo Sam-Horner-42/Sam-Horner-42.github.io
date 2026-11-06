@@ -1,0 +1,881 @@
+/* ---------- Registers page (projects.html) ----------
+   The page container, title block and shared animations are in section.css.
+   Uses the colour variables from StyleSheet.css, so it follows dark mode too. */
+
+
+/* ---------- Memory: a RAM stick holding the current project ---------- */
+
+.memory-bay {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.25rem;
+  margin-top: 1.75rem;
+}
+
+.memory-wrap {
+  position: relative;
+  z-index: 4;                  /* the memory map opens over the CPU below */
+  flex: 0 1 34rem;
+  min-width: 0;
+}
+
+/* Previous / next: the same raised tiles as the corner links */
+.step {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border: 1px solid var(--tile-edge);
+  border-radius: 6px;
+  background: var(--tile);
+  box-shadow: 4px 4px 0 var(--tile-shade);
+  color: var(--ink);
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.step svg {
+  width: 1.5rem;
+  height: 1.5rem;
+  fill: currentColor;
+}
+
+.step:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--tile-shade);
+}
+
+.step:active {
+  transform: translate(3px, 3px);
+  box-shadow: 1px 1px 0 var(--tile-shade);
+  transition-duration: 0.05s;
+}
+
+.memory {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  color: var(--unit-ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.memory__board {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.85rem 0.9rem 1.7rem;     /* room at the bottom for the gold contacts */
+  border-radius: 6px;
+  background: var(--pcb);
+  box-shadow: 6px 6px 0 var(--pcb-edge);
+  transition: box-shadow 0.15s ease;
+}
+
+.memory__chip {
+  flex: none;
+  width: 2.1rem;
+  height: 3rem;
+  border-radius: 2px;
+  background: #1e211c;
+  box-shadow: inset 0 0 0 1px #3a3f35;
+}
+
+/* The label sticker in the middle of the stick */
+.memory__label {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  padding: 0.5rem 2rem 0.6rem;
+  border-radius: 3px;
+  background: #f3f0e4;
+  text-align: center;
+}
+
+[data-theme="dark"] .memory__label { background: #d8d4c5; }
+
+.memory__caption {
+  display: block;
+  font: 500 0.7rem "IBM Plex Mono", ui-monospace, monospace;
+  letter-spacing: 0.1em;
+  color: #5a6156;
+}
+
+.memory__slot { display: inline-block; }
+
+.memory__name {
+  display: inline-block;
+  margin-top: 0.1rem;
+  font-size: 1.15rem;
+  font-weight: 500;
+  line-height: 1.25;
+}
+
+.memory__open {
+  position: absolute;
+  top: 50%;
+  right: 0.6rem;
+  width: 1rem;
+  height: 1rem;
+  margin-top: -0.5rem;
+  fill: #5a6156;
+  transition: rotate 0.2s ease;
+}
+
+.memory[aria-expanded="true"] .memory__open { rotate: 180deg; }
+
+/* Gold contacts along the bottom edge, in two groups either side of the key notch */
+.memory__fingers {
+  position: absolute;
+  left: 1.5rem;
+  right: 1.5rem;
+  bottom: 0.45rem;
+  height: 0.75rem;
+  display: flex;
+  gap: 4%;                     /* the notch */
+}
+
+/* "round" squeezes or stretches the spacing so each group holds a whole number of
+   contacts, so none are ever cut off at the ends or at the notch */
+.memory__fingers::before,
+.memory__fingers::after {
+  content: "";
+  background: linear-gradient(90deg, transparent 20%, var(--pin) 20% 80%, transparent 80%) 0 0 / 0.65rem 100% round;
+}
+
+.memory__fingers::before { flex: 40; }
+.memory__fingers::after  { flex: 56; }
+
+.memory:hover { transform: translate(-2px, -2px); }
+.memory:hover .memory__board { box-shadow: 8px 8px 0 var(--pcb-edge); }
+
+.memory:active { transform: translate(3px, 3px); transition-duration: 0.05s; }
+.memory:active .memory__board { box-shadow: 3px 3px 0 var(--pcb-edge); }
+
+.step:focus-visible,
+.memory:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 4px;
+}
+
+/* The list of every project */
+.memory-map {
+  position: absolute;
+  top: calc(100% + 1rem);
+  left: 50%;
+  translate: -50% 0;
+  box-sizing: border-box;
+  width: min(26rem, calc(100vw - 2rem));
+  padding: 0.75rem;
+  border: 1px solid var(--tile-edge);
+  border-radius: 8px;
+  background: var(--tile);
+  box-shadow: 6px 6px 0 var(--tile-shade);
+}
+
+.memory-map[hidden] { display: none; }
+
+.memory-map__title {
+  margin: 0 0 0.4rem 0.4rem;
+  font: 500 0.7rem "IBM Plex Mono", ui-monospace, monospace;
+  letter-spacing: 0.12em;
+  color: var(--ink-soft);
+}
+
+.memory-map__list {
+  display: grid;
+  gap: 0.2rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.memory-map__slot {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.85rem;
+  width: 100%;
+  padding: 0.55rem 0.6rem;
+  border: 0;
+  border-radius: 5px;
+  background: none;
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.memory-map__slot:hover { background: var(--die); }
+
+.memory-map__slot:focus-visible {
+  background: var(--die);
+  outline: 2px solid var(--ink);
+  outline-offset: -2px;
+}
+
+.memory-map__addr,
+.memory-map__state {
+  font: 500 0.75rem "IBM Plex Mono", ui-monospace, monospace;
+  letter-spacing: 0.06em;
+}
+
+.memory-map__addr { color: var(--core-line); }
+.memory-map__name { font-weight: 500; }
+.memory-map__state { color: var(--ink-soft); }
+
+
+/* ---------- The CPU: a die-coloured panel holding the registers ---------- */
+
+.cpu-box {
+  --bus-gap: 3rem;             /* space between the memory and the CPU, crossed by the bus */
+  --col-gap: 3rem;
+
+  position: relative;
+  isolation: isolate;          /* keeps the traces under the registers but over the panel */
+  display: grid;
+  grid-template-columns: minmax(15rem, 1fr) minmax(0, 2fr);
+  grid-template-rows: auto auto auto 1fr auto;
+  grid-template-areas:
+    "address file"
+    "pc      file"
+    "ir      file"
+    ".       file"
+    "display display";
+  gap: 1.75rem var(--col-gap);
+  align-items: start;
+  margin-top: var(--bus-gap);
+  padding: 2rem;
+  border: 1.5px solid var(--die-line);
+  border-radius: 10px;
+  background: var(--die);
+}
+
+
+/* The bus from the memory down into the register file */
+.cpu-box::before,
+.cpu-box::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: calc(-1 * var(--bus-gap) - 0.75rem);
+  width: 6px;
+  height: calc(var(--bus-gap) + 0.75rem + 3.5rem);
+  background: var(--trace);
+}
+
+.cpu-box::before { left: calc(50% - 1.75rem); }
+.cpu-box::after  { left: calc(50% + 1.75rem - 6px); }
+
+
+/* ---------- Registers ---------- */
+
+.register,
+.register-file {
+  position: relative;
+  box-sizing: border-box;
+  min-width: 0;
+  border: 1.5px solid var(--reg-edge);
+  border-radius: 6px;
+  background: var(--reg-face);
+  box-shadow: 6px 6px 0 var(--reg-shade);
+  color: var(--unit-ink);
+}
+
+.register { padding: 0.9rem 1.1rem 1.1rem; }
+
+.register--address { grid-area: address; transition: transform 0.15s ease, box-shadow 0.15s ease; }
+.register--pc      { grid-area: pc; }
+.register--ir      { grid-area: ir; }
+.register-file     { grid-area: file; overflow: hidden; --caption-ink: var(--reg-tint); }   /* overflow keeps the write flash inside the rounded corners */
+
+/* "REGISTERS", printed across the top of the register file */
+.register-file__caption {
+  padding: 0.7rem 1.25rem 0.6rem;
+  border-bottom: 1.5px solid var(--reg-edge);
+}
+
+/* Short traces from each special register across to the register file */
+.register::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 50%;
+  left: 100%;
+  width: calc(var(--col-gap) + 6px);
+  height: 6px;
+  margin-top: -3px;
+  background: var(--trace);
+}
+
+.register__caption {
+  display: block;
+  font: 500 0.7rem "IBM Plex Mono", ui-monospace, monospace;
+  letter-spacing: 0.1em;
+  color: var(--reg-tint);
+}
+
+.register__name,
+.reg-row__name {
+  margin: 0.15rem 0 0.5rem;
+  font-size: 1.05rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.register p { margin: 0; }
+
+/* Address register: the whole block links to the code */
+.address {
+  font: 0.9rem/1.45 "IBM Plex Mono", ui-monospace, monospace;
+  color: inherit;
+  overflow-wrap: anywhere;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.address svg {
+  width: 0.8em;
+  height: 0.8em;
+  margin-left: 0.35em;
+  fill: currentColor;
+  vertical-align: -0.05em;
+}
+
+.address:not([href]) svg { display: none; }
+
+.address__end { white-space: nowrap; }
+
+.address[href]::before {          /* stretches the link over the whole register */
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 6px;
+}
+
+.address:focus-visible { outline: none; }
+
+.register--address:has(.address:focus-visible) {
+  outline: 2px solid var(--ink);
+  outline-offset: 4px;
+}
+
+.register--address:has(.address[href]):hover {
+  transform: translate(-3px, -3px);
+  box-shadow: 9px 9px 0 var(--reg-shade);
+}
+
+.register--address:has(.address[href]):active {
+  transform: translate(4px, 4px);
+  box-shadow: 2px 2px 0 var(--reg-shade);
+  transition-duration: 0.05s;
+}
+
+/* Program counter */
+.pc-state {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: 1.05rem;
+  font-weight: 500;
+}
+
+.led {
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  background: var(--led);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--led) 30%, transparent);
+}
+
+.register--pc.is-finished { --led: #3d8a37; }
+.register--pc.is-running  { --led: #d9822b; }
+
+.register--pc.is-running .led { animation: led-blink 1.8s ease-in-out infinite; }
+
+@keyframes led-blink {
+  50% { opacity: 0.35; }
+}
+
+.register .pc-note { margin-top: 0.4rem; font-size: 0.95rem; line-height: 1.5; }
+.pc-note:empty { display: none; }
+
+.register .pc-next {
+  margin-top: 0.7rem;
+  padding-top: 0.6rem;
+  border-top: 1px dashed var(--reg-edge);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.pc-next__op {
+  margin-right: 0.5rem;
+  font: 500 0.72rem "IBM Plex Mono", ui-monospace, monospace;
+  letter-spacing: 0.1em;
+  color: var(--reg-tint);
+}
+
+/* Instruction register: numbered build steps */
+.steps {
+  margin: 0;
+  padding: 0.35rem 0.7rem;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.06);
+  list-style: none;
+  counter-reset: step;
+  font: 0.8rem/1.5 "IBM Plex Mono", ui-monospace, monospace;
+}
+
+.steps li {
+  display: grid;
+  grid-template-columns: 1.6rem minmax(0, 1fr);
+  gap: 0.3rem;
+  padding: 0.3rem 0;
+  overflow-wrap: anywhere;
+  counter-increment: step;
+}
+
+.steps li + li { border-top: 1px dashed var(--reg-edge); }
+
+.steps li::before {
+  content: counter(step, decimal-leading-zero);
+  color: var(--reg-tint);
+}
+
+.register .ir-note { margin-top: 0.7rem; font-size: 0.875rem; line-height: 1.5; }
+.ir-note:empty { display: none; }
+
+
+/* ---------- Register file: R1 to RN ---------- */
+
+.reg-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 3.75rem minmax(0, 1fr);
+}
+
+.reg-row + .reg-row { border-top: 1.5px solid var(--reg-edge); }
+
+.reg-row__index {
+  padding-top: 1rem;
+  border-right: 1.5px solid var(--reg-edge);
+  text-align: center;
+  font: 500 0.9rem "IBM Plex Mono", ui-monospace, monospace;
+  color: var(--reg-tint);
+}
+
+.reg-row__body {
+  min-width: 0;
+  padding: 0.85rem 1.25rem 1.1rem;
+  font-size: 0.975rem;
+  line-height: 1.55;
+}
+
+.reg-row__body p { margin: 0; }
+
+.reg-row ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  list-style: square;
+}
+
+.reg-row li + li { margin-top: 0.25rem; }
+.reg-row li::marker { color: var(--reg-tint); }
+
+/* R2: tech stack */
+.stack {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 0.3rem 1rem;
+  margin: 0;
+}
+
+.stack dt {
+  font: 500 0.7rem/1.55rem "IBM Plex Mono", ui-monospace, monospace;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--reg-tint);
+}
+
+.stack dd { margin: 0; }
+
+/* R5: challenges and lessons side by side */
+.lessons {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem 1.5rem;
+}
+
+.lessons h3 {
+  margin: 0 0 0.3rem;
+  font: 500 0.7rem "IBM Plex Mono", ui-monospace, monospace;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--reg-tint);
+}
+
+/* RN: results as small cells */
+.reg-row .results {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr));
+  gap: 0.6rem;
+  padding: 0;
+  list-style: none;
+}
+
+.reg-row .results li {
+  margin: 0;
+  padding: 0.5rem 0.7rem 0.6rem;
+  border: 1.5px solid var(--reg-edge);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.results__value {
+  display: block;
+  font: 500 1.35rem/1.2 "IBM Plex Mono", ui-monospace, monospace;
+}
+
+.results__label {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 0.8rem;
+  line-height: 1.3;
+  color: var(--reg-tint);
+}
+
+
+
+/* ---------- Loading a project ----------
+   The bus lights up and the registers are rewritten one after another. */
+
+.cpu-box.is-loading::before,
+.cpu-box.is-loading::after {
+  background: repeating-linear-gradient(180deg, var(--trace-lit) 0 10px, var(--signal) 10px 13px);
+  animation: bus-flow-down 0.45s linear infinite;
+}
+
+.cpu-box.is-loading .register::after {
+  background: repeating-linear-gradient(90deg, var(--trace-lit) 0 10px, var(--signal) 10px 13px);
+  animation: bus-flow-left 0.45s linear infinite;
+}
+
+.cpu-box.is-writing .writable {
+  animation: write-in 0.42s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+  animation-delay: calc(var(--i, 0) * 55ms + 120ms);
+}
+
+/* A quick flash as each register is written */
+.cpu-box.is-writing .reg-row::before,
+.cpu-box.is-writing .register::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: #ffffff;
+  opacity: 0;
+  pointer-events: none;
+  animation: write-flash 0.6s ease-out;
+  animation-delay: calc(var(--i, 0) * 55ms + 80ms);
+}
+
+.memory.is-switching .memory__name,
+.memory.is-switching .memory__slot {
+  animation: memory-swap 0.35s ease-out both;
+}
+
+@keyframes memory-swap {
+  from { opacity: 0; transform: translateX(calc(var(--dir, 1) * 14px)); }
+}
+
+
+/* ---------- LCD screen: screenshots or a GIF ----------
+   Not a register, but a neat place for pictures of the project.
+   It sits centred below all the registers, as big as the panel allows. */
+
+.display {
+  grid-area: display;
+  position: relative;
+  justify-self: center;
+  box-sizing: border-box;
+  min-width: 0;
+  margin-top: 0.75rem;
+
+  /* Up to 46rem wide, but never so big that the screen is taller than most of the window.
+     --screen-ratio is the screen's width / height (projects.js sets it), and 3.75rem
+     covers the board and bezel around the screen. */
+  width: min(100%, 46rem, 62vh * var(--screen-ratio, 1.3333) + 3.75rem);
+}
+
+.display[hidden] { display: none; }
+
+/* Two short traces up into the register file, spaced like the memory bus at the top */
+.display::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  bottom: 100%;
+  left: 50%;
+  width: 3.5rem;
+  height: calc(2.5rem + 8px);
+  translate: -50% 0;
+  background: var(--trace);
+  -webkit-mask: linear-gradient(90deg, #000 0 6px, transparent 6px calc(100% - 6px), #000 calc(100% - 6px));
+          mask: linear-gradient(90deg, #000 0 6px, transparent 6px calc(100% - 6px), #000 calc(100% - 6px));
+}
+
+.cpu-box.is-loading .display::before {
+  background: repeating-linear-gradient(180deg, var(--trace-lit) 0 10px, var(--signal) 10px 13px);
+  animation: bus-flow-down 0.45s linear infinite;
+}
+
+/* The module's circuit board, with a mounting hole in each corner */
+.display__board {
+  --hole: radial-gradient(circle, var(--die) 0 3px, var(--pin) 3.5px 5px, transparent 5.5px);
+  padding: 0.9rem 1.25rem 1rem;
+  border-radius: 6px;
+  background:
+    var(--hole) left 2px top 2px / 20px 20px no-repeat,
+    var(--hole) right 2px top 2px / 20px 20px no-repeat,
+    var(--hole) left 2px bottom 2px / 20px 20px no-repeat,
+    var(--hole) right 2px bottom 2px / 20px 20px no-repeat,
+    var(--pcb);
+  box-shadow: 6px 6px 0 var(--pcb-edge);
+  color: #ece6cf;              /* the cream "silkscreen" printing on the board */
+}
+
+.display__top {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  padding: 0 0.9rem 0.7rem;
+}
+
+.display__silk {
+  font: 500 0.75rem "IBM Plex Mono", ui-monospace, monospace;
+  letter-spacing: 0.14em;
+  opacity: 0.75;
+}
+
+.display__title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.display__bezel {
+  padding: 0.6rem;
+  border-radius: 5px;
+  background: #1b1d19;
+  box-shadow: inset 0 0 0 1px #34382f;
+}
+
+.display__screen {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: var(--screen, 4 / 3);
+  overflow: hidden;
+  border-radius: 2px;
+  background: #0b0d0a;
+}
+
+.display__screen[href] { cursor: zoom-in; }
+
+.display__screen:focus-visible {
+  outline: 2px solid #ece6cf;
+  outline-offset: 3px;
+}
+
+/* A faint glare on the glass */
+.display__screen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), transparent 45%);
+  pointer-events: none;
+}
+
+.display__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.display.is-pixel-art .display__image { image-rendering: pixelated; }
+
+.display__screen.is-changing .display__image { animation: screen-flicker 0.2s ease-out; }
+
+@keyframes screen-flicker {
+  from { opacity: 0.3; }
+}
+
+.display__nosignal {
+  display: none;
+  font: 500 0.75rem "IBM Plex Mono", ui-monospace, monospace;
+  letter-spacing: 0.2em;
+  color: #5f6658;
+}
+
+.display.is-off .display__image { display: none; }
+.display.is-off .display__nosignal { display: block; }
+
+/* Two little tactile buttons to step through the pictures */
+.display__controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.25rem;
+  margin-top: 0.9rem;
+}
+
+.display__controls[hidden] { display: none; }
+
+.display__count {
+  min-width: 4rem;
+  text-align: center;
+  font: 500 0.8rem "IBM Plex Mono", ui-monospace, monospace;
+  letter-spacing: 0.1em;
+}
+
+.display__button {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--switch-cap);
+  box-shadow: 0 0 0 3px var(--switch-plate), 2px 2px 0 3px var(--switch-cap-shade);
+  color: var(--switch-plate);
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.display__button svg {
+  width: 1rem;
+  height: 1rem;
+  fill: currentColor;
+}
+
+.display__button:hover { background: var(--switch-cap-hover); }
+
+.display__button:active {
+  transform: translate(1.5px, 1.5px);
+  box-shadow: 0 0 0 3px var(--switch-plate), 0.5px 0.5px 0 3px var(--switch-cap-shade);
+}
+
+.display__button:focus-visible {
+  outline: 2px solid #ece6cf;
+  outline-offset: 5px;
+}
+
+/* "Play it on itch.io", in the same raised-tile style as the arrows, centred under the screen */
+.display__play {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.45rem;
+  width: fit-content;
+  margin: 1.1rem auto 0;
+  padding: 0.55rem 0.9rem;
+  border: 1px solid var(--tile-edge);
+  border-radius: 6px;
+  background: var(--tile);
+  box-shadow: 4px 4px 0 var(--tile-shade);
+  color: var(--ink);
+  font-weight: 500;
+  text-decoration: none;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.display__play[hidden] { display: none; }
+
+.display__play svg {
+  width: 0.8rem;
+  height: 0.8rem;
+  fill: currentColor;
+}
+
+.display__play:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--tile-shade);
+}
+
+.display__play:active {
+  transform: translate(3px, 3px);
+  box-shadow: 1px 1px 0 var(--tile-shade);
+  transition-duration: 0.05s;
+}
+
+.display__play:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+
+
+/* ---------- Smaller screens ---------- */
+
+/* One column: special registers first, then the register file, how to build, and the screen */
+@media (max-width: 800px) {
+  .cpu-box {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: none;
+    grid-template-areas: "address" "pc" "file" "ir" "display";
+    gap: 1.5rem;
+    padding: 1.25rem 1rem 1.4rem;
+  }
+
+  .register::after { display: none; }
+
+  /* the traces reach up to the instruction register just above */
+  .display::before { height: calc(2.25rem + 8px); }
+
+  /* the bus stops at the edge of the CPU */
+  .cpu-box::before,
+  .cpu-box::after {
+    height: calc(var(--bus-gap) + 0.75rem + 2px);
+  }
+}
+
+@media (max-width: 560px) {
+  .memory-bay { gap: 0.6rem; }
+  .step { width: 2.4rem; height: 2.4rem; }
+  .memory__chip { display: none; }
+  .memory__label { padding: 0.5rem 1.8rem 0.55rem; }
+  .memory__name { font-size: 1rem; }
+
+  .reg-row { grid-template-columns: 2.6rem minmax(0, 1fr); }
+  .reg-row__body { padding: 0.8rem 0.9rem 1rem; }
+  .lessons { grid-template-columns: minmax(0, 1fr); }
+
+  /* give the screen as much of the narrow width as possible */
+  .display__board { padding: 0.8rem 0.75rem 0.85rem; }
+  .display__bezel { padding: 0.4rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .step,
+  .memory,
+  .memory__board,
+  .register--address,
+  .display__button,
+  .display__play {
+    transition: none;
+  }
+
+  .register--pc.is-running .led,
+  .display__screen.is-changing .display__image {
+    animation: none;
+  }
+}

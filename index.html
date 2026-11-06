@@ -1,145 +1,216 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Samuel Horner | Portfolio</title>
-<meta name="description" content="Portfolio of Samuel Horner: selected projects, background and contact details.">
-<meta name="theme-color" content="#06110b">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231d5a3c'/%3E%3Ccircle cx='23' cy='23' r='4' fill='%23b8f27c'/%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css">
-<!-- Enables scroll-reveal styles; if js/main.js fails to load, content is shown anyway after 2.5s. -->
-<script>(function(d){d.classList.add('js');setTimeout(function(){if(!d.classList.contains('ready'))d.classList.remove('js')},2500)})(document.documentElement)</script>
-<script src="js/main.js" defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Samuel Horner - Portfolio</title>
+
+    <script>
+        // Pick the theme before the page draws so it never flashes the wrong colours
+        try { var savedTheme = localStorage.getItem("theme"); } catch (e) {}
+        document.documentElement.dataset.theme = savedTheme ||
+            (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+
+        // Just left a section page: start zoomed into its block (see script.js)
+        try {
+            var trip = JSON.parse(sessionStorage.getItem("zoom-out") || "null");
+            sessionStorage.removeItem("zoom-out");
+            if (trip && Date.now() - trip.time < 4000 && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+                document.documentElement.classList.add("is-returning");
+                document.documentElement.dataset.returning = trip.section;
+            }
+        } catch (e) {}
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&display=swap">
+    <link rel="stylesheet" href="StyleSheet.css">
+    <script src="theme.js" defer></script>
+    <script src="script.js" defer></script>
 </head>
-<body id="top">
 
-<header class="site-nav">
-  <div class="wrap">
-    <nav aria-label="Main">
-      <a class="mark" href="#top" aria-label="Samuel Horner, back to top">SH<i></i></a>
-      <ul>
-        <li><a href="#about">About</a></li>
-        <li><a href="#projects">Projects</a></li>
-        <li><a href="#contact">Contact</a></li>
-        <li><a class="btn ghost" href="data/Samuel Horner - Resume - 2026.pdf">Resume</a></li>
-      </ul>
-    </nav>
-  </div>
-</header>
+<body>
+    <!-- A solid block of colour, used for the zoom into a section and back out -->
+    <div class="zoom-cover" aria-hidden="true"></div>
 
-<div class="hero">
-  <div class="hero-bg" aria-hidden="true"><span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span></div>
-  <div class="hero-inner">
-    <div class="status">Open to new opportunities</div>
-    <!-- Each letter is its own span so it can animate in; --i sets the order. -->
-    <h1 class="name" aria-label="Samuel Horner">
-      <span class="w" aria-hidden="true"><span class="ch" style="--i:0">S</span><span class="ch" style="--i:1">a</span><span class="ch" style="--i:2">m</span><span class="ch" style="--i:3">u</span><span class="ch" style="--i:4">e</span><span class="ch" style="--i:5">l</span></span>
-      <span class="w" aria-hidden="true"><span class="ch" style="--i:6">H</span><span class="ch" style="--i:7">o</span><span class="ch" style="--i:8">r</span><span class="ch" style="--i:9">n</span><span class="ch" style="--i:10">e</span><span class="ch" style="--i:11">r</span><span class="ch dot" style="--i:12">.</span></span>
-    </h1>
-    <p class="pitch">Reliable. Hardworking. Empathetic.</p>
-    <div class="cta">
-      <a class="btn fill" href="#projects">View projects</a>
-      <a class="btn ghost" href="#contact">Get in touch</a>
-    </div>
-  </div>
-  <a class="scroll-cue" href="#about">Scroll<span></span></a>
-</div>
+    <!-- The wire from the push button to the chip. theme.js draws it to fit the screen. -->
+    <svg class="wire-layer" aria-hidden="true">
+        <path class="wire" />
+        <path class="wire-pulse" />
+    </svg>
 
-<main>
-  <section id="about">
-    <div class="wrap grid">
-      <h2>About</h2>
-      <div>
-        <p class="lead">I strive to make things that I am proud of and have a real impact in the world.</p>
-        <p class="about-text">Currently pursuing my Computer Engineering Technology - Computing Science diploma at Algonquin college.
-          I am very invested in programming, embedded systems, computer systems mathematics and volunteer work.</p>
+    <header class="corners">
+        <nav class="socials" aria-label="Links">
+            <a class="social social--home" href="index.html" aria-label="Home" aria-current="page">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11.03 2.59a1.501 1.501 0 0 1 1.94 0l7.5 6.363a1.5 1.5 0 0 1 .53 1.144V19.5a1.5 1.5 0 0 1-1.5 1.5h-5.75a.75.75 0 0 1-.75-.75V14h-2v6.25a.75.75 0 0 1-.75.75H4.5A1.5 1.5 0 0 1 3 19.5v-9.403c0-.44.194-.859.53-1.144ZM12 3.734l-7.5 6.363V19.5h5v-6.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v6.25h5v-9.403Z"/></svg>
+            </a>
+            <a class="social" href="https://github.com/Sam-Horner-42" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.226 17.284c-2.965-.36-5.054-2.493-5.054-5.256 0-1.123.404-2.336 1.078-3.144-.292-.741-.247-2.314.09-2.965.898-.112 2.111.36 2.83 1.01.853-.269 1.752-.404 2.853-.404 1.1 0 1.999.135 2.807.382.696-.629 1.932-1.1 2.83-.988.315.606.36 2.179.067 2.942.72.854 1.101 2 1.101 3.167 0 2.763-2.089 4.852-5.098 5.234.763.494 1.28 1.572 1.28 2.807v2.336c0 .674.561 1.056 1.235.786 4.066-1.55 7.255-5.615 7.255-10.646C23.5 6.188 18.334 1 11.978 1 5.62 1 .5 6.188.5 12.545c0 4.986 3.167 9.12 7.435 10.669.606.225 1.19-.18 1.19-.786V20.63a2.9 2.9 0 0 1-1.078.224c-1.483 0-2.359-.808-2.987-2.313-.247-.607-.517-.966-1.034-1.033-.27-.023-.359-.135-.359-.27 0-.27.45-.471.898-.471.652 0 1.213.404 1.797 1.235.45.651.921.943 1.483.943.561 0 .92-.202 1.437-.719.382-.381.674-.718.944-.943"/></svg>
+            </a>
+            <a class="social" href="https://skwidge.itch.io/" target="_blank" rel="noopener noreferrer" aria-label="itch.io">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.13 1.338C2.08 1.96.02 4.328 0 4.95v1.03c0 1.303 1.22 2.45 2.325 2.45 1.33 0 2.436-1.102 2.436-2.41 0 1.308 1.07 2.41 2.4 2.41 1.328 0 2.362-1.102 2.362-2.41 0 1.308 1.137 2.41 2.466 2.41h.024c1.33 0 2.466-1.102 2.466-2.41 0 1.308 1.034 2.41 2.363 2.41 1.33 0 2.4-1.102 2.4-2.41 0 1.308 1.106 2.41 2.435 2.41C22.78 8.43 24 7.282 24 5.98V4.95c-.02-.62-2.082-2.99-3.13-3.612-3.253-.114-5.508-.134-8.87-.133-3.362 0-7.945.053-8.87.133zm6.376 6.477a2.74 2.74 0 0 1-.468.602c-.5.49-1.19.795-1.947.795a2.786 2.786 0 0 1-1.95-.795c-.182-.178-.32-.37-.446-.59-.127.222-.303.412-.486.59a2.788 2.788 0 0 1-1.95.795c-.092 0-.187-.025-.264-.052-.107 1.113-.152 2.176-.168 2.95v.005l-.006 1.167c.02 2.334-.23 7.564 1.03 8.85 1.952.454 5.545.662 9.15.663 3.605 0 7.198-.21 9.15-.664 1.26-1.284 1.01-6.514 1.03-8.848l-.006-1.167v-.004c-.016-.775-.06-1.838-.168-2.95-.077.026-.172.052-.263.052a2.788 2.788 0 0 1-1.95-.795c-.184-.178-.36-.368-.486-.59-.127.22-.265.412-.447.59a2.786 2.786 0 0 1-1.95.794c-.76 0-1.446-.303-1.948-.793a2.74 2.74 0 0 1-.468-.602 2.738 2.738 0 0 1-.463.602 2.787 2.787 0 0 1-1.95.794h-.16a2.787 2.787 0 0 1-1.95-.793 2.738 2.738 0 0 1-.464-.602zm-2.004 2.59v.002c.795.002 1.5 0 2.373.953.687-.072 1.406-.108 2.125-.107.72 0 1.438.035 2.125.107.873-.953 1.578-.95 2.372-.953.376 0 1.876 0 2.92 2.934l1.123 4.028c.832 2.995-.266 3.068-1.636 3.07-2.03-.075-3.156-1.55-3.156-3.025-1.124.184-2.436.276-3.748.277-1.312 0-2.624-.093-3.748-.277 0 1.475-1.125 2.95-3.156 3.026-1.37-.004-2.468-.077-1.636-3.072l1.122-4.027c1.045-2.934 2.545-2.934 2.92-2.934zM12 12.714c-.002.002-2.14 1.964-2.523 2.662l1.4-.056v1.22c0 .056.56.033 1.123.007.562.026 1.124.05 1.124-.008v-1.22l1.4.055C14.138 14.677 12 12.713 12 12.713z"/></svg>
+            </a>
+            <a class="social" href="https://www.linkedin.com/in/sam-horner-cet/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+            </a>
+        </nav>
 
-        <div class="skills">
-          <div>
-            <h3>Languages</h3>
-            <ul>
-              <li>C</li>
-              <li>C++</li>
-              <li>Java</li>
-              <li>HTML &amp; CSS</li>
-              <li>PHP</li>
-              <li>SQL</li>
-              <li>Lua</li>
-            </ul>
-          </div>
-          <div>
-            <h3>Tools</h3>
-            <ul>
-              <li>Git &amp; GitHub</li>
-              <li>Visual Studio &amp; Visual Studio Code</li>
-              <li>Windows &amp; Linux</li>
-              <li>REST APIs</li>
-              <li>Godot, Love2D &amp; Pico8</li>
-            </ul>
-          </div>
+        <!-- Dark mode push button (a 6mm tactile switch, seen from above) -->
+        <button class="power-switch" type="button" aria-label="Dark mode" aria-pressed="false">
+            <svg class="switch" viewBox="0 0 64 78" aria-hidden="true">
+                <rect class="switch__leg" id="switch-terminal" x="13" y="50" width="6" height="26" rx="1.5" />
+                <rect class="switch__leg" x="45" y="50" width="6" height="26" rx="1.5" />
+                <rect class="switch__body-shade" x="8" y="8" width="54" height="54" rx="5" />
+                <rect class="switch__body" x="4" y="4" width="54" height="54" rx="5" />
+                <rect class="switch__plate" x="8" y="8" width="46" height="46" rx="3" />
+                <circle class="switch__peg" cx="14" cy="14" r="4" />
+                <circle class="switch__peg" cx="48" cy="14" r="4" />
+                <circle class="switch__peg" cx="14" cy="48" r="4" />
+                <circle class="switch__peg" cx="48" cy="48" r="4" />
+                <circle class="switch__cap-shade" cx="33.5" cy="33.5" r="13" />
+                <g class="switch__cap">
+                    <circle class="switch__cap-top" cx="31" cy="31" r="13" />
+                    <path class="switch__cap-shine" d="M22.5 29a9 9 0 0 1 6.5-6.8" />
+                </g>
+            </svg>
+        </button>
+    </header>
+
+    <main id="content">
+        <h1 class="name">Samuel Horner</h1>
+
+        <nav class="chip" aria-label="Portfolio sections">
+            <svg class="cpu" viewBox="0 0 664 700">
+                <defs>
+                    <!-- Gold contacts across the package -->
+                    <pattern id="contact-dots" x="8" y="8" width="12" height="12" patternUnits="userSpaceOnUse">
+                        <circle class="contact" cx="6" cy="6" r="2.3" />
+                    </pattern>
+
+                    <!-- A single pin, repeated along the bottom edge -->
+                    <pattern id="pin-row" x="20" y="652" width="24" height="44" patternUnits="userSpaceOnUse">
+                        <rect class="pin" x="8" y="0" width="8" height="40" rx="2" />
+                        <rect class="pin-shade" x="12.5" y="0" width="3.5" height="40" rx="1" />
+                    </pattern>
+                </defs>
+
+                <!-- Package, die and core outline (decoration only) -->
+                <g aria-hidden="true">
+                    <rect x="20" y="652" width="624" height="44" fill="url(#pin-row)" />
+                    <rect class="pcb-edge" x="16" y="16" width="648" height="648" rx="14" />
+                    <rect class="pcb" x="8" y="8" width="648" height="648" rx="14" />
+                    <rect x="8" y="8" width="648" height="648" rx="14" fill="url(#contact-dots)" />
+                    <rect class="die" x="56" y="56" width="552" height="552" rx="8" />
+
+                    <rect class="core" x="250" y="74" width="164" height="374" rx="6" />
+                    <rect class="core-tag-bg" x="258" y="66" width="46" height="16" />
+                    <text class="core-tag" x="265" y="78">CORE</text>
+                </g>
+
+                <!-- Bus traces. data-connects lists the sections each trace joins (used by script.js) -->
+                <g aria-hidden="true">
+                    <path class="trace" data-connects="about work" d="M270 140H149V176" />
+                    <path class="trace" data-connects="about volunteer" d="M394 140H515V176" />
+                    <path class="trace" data-connects="about resume" d="M302 176V226" />
+                    <path class="trace" data-connects="about resume" d="M362 176V226" />
+                    <path class="trace" data-connects="resume work" d="M270 262H216" />
+                    <path class="trace" data-connects="resume volunteer" d="M394 262H448" />
+                    <path class="trace" data-connects="resume projects" d="M302 298V348" />
+                    <path class="trace" data-connects="resume projects" d="M362 298V348" />
+                    <path class="trace" data-connects="projects work" d="M270 384H216" />
+                    <path class="trace" data-connects="projects volunteer" d="M394 384H448" />
+                    <path class="trace" data-connects="work contact" d="M149 420V518H232" />
+                    <path class="trace" data-connects="volunteer contact" d="M515 420V518H432" />
+                    <path class="trace" data-connects="contact" d="M332 550V608" />
+
+                    <!-- Input line from the dark mode button to the control unit -->
+                    <path class="input-trace" d="M560 14V112H394" />
+                    <path class="input-pulse" d="M560 14V112H394" />
+                    <rect class="pad" id="wire-pad" x="551" y="2" width="18" height="14" rx="2" />
+                </g>
+
+                <!--
+                    The sections. data-zoom makes the chip zoom into that block on the way
+                    to its page; the resume is a PDF, so it just opens in a new tab.
+                -->
+                <a class="unit unit--control" href="about.html" aria-label="About me"
+                   data-section="about" data-zoom data-blurb="Who I am and what I'm working towards.">
+                    <rect class="unit__shadow" x="268" y="102" width="140" height="88" rx="4" />
+                    <g class="unit__face">
+                        <rect class="unit__body" x="262" y="96" width="140" height="88" rx="4" />
+                        <text class="unit__caption" x="274" y="116">CONTROL UNIT</text>
+                        <text class="unit__label" x="332" y="154">About me</text>
+                    </g>
+                </a>
+
+                <a class="unit unit--cache" href="work.html" aria-label="Work experience"
+                   data-section="work" data-zoom data-blurb="Jobs I've held and what I did in them.">
+                    <rect class="unit__shadow" x="80" y="172" width="150" height="262" rx="4" />
+                    <g class="unit__face">
+                        <rect class="unit__body" x="74" y="166" width="150" height="262" rx="4" />
+                        <text class="unit__caption" x="86" y="186">L1 DATA CACHE</text>
+                        <text class="unit__label"><tspan x="149" y="293">Work</tspan><tspan x="149" y="322">experience</tspan></text>
+                    </g>
+                </a>
+
+                <!-- The resume is a PDF, so it opens in a new tab instead of zooming -->
+                <a class="unit unit--alu" href="data/Samuel_Horner_Resume_2026.pdf" target="_blank" rel="noopener"
+                   aria-label="Resume (PDF, opens in a new tab)"
+                   data-section="resume" data-blurb="My resume as a PDF, in a new tab.">
+                    <rect class="unit__shadow" x="268" y="224" width="140" height="88" rx="4" />
+                    <g class="unit__face">
+                        <rect class="unit__body" x="262" y="218" width="140" height="88" rx="4" />
+                        <text class="unit__caption" x="274" y="238">ALU</text>
+                        <text class="unit__label" x="332" y="276">Resume</text>
+                    </g>
+                </a>
+
+                <a class="unit unit--cache" href="volunteer.html" aria-label="Volunteer experience"
+                   data-section="volunteer" data-zoom data-blurb="Where I've volunteered and what I did.">
+                    <rect class="unit__shadow" x="446" y="172" width="150" height="262" rx="4" />
+                    <g class="unit__face">
+                        <rect class="unit__body" x="440" y="166" width="150" height="262" rx="4" />
+                        <text class="unit__caption" x="452" y="186">L1 INSTR. CACHE</text>
+                        <text class="unit__label"><tspan x="515" y="293">Volunteer</tspan><tspan x="515" y="322">experience</tspan></text>
+                    </g>
+                </a>
+
+                <a class="unit unit--registers" href="projects.html" aria-label="Projects"
+                   data-section="projects" data-zoom data-blurb="Load a project into the registers to see what's inside.">
+                    <rect class="unit__shadow" x="268" y="346" width="140" height="88" rx="4" />
+                    <g class="unit__face">
+                        <rect class="unit__body" x="262" y="340" width="140" height="88" rx="4" />
+                        <text class="unit__caption" x="274" y="360">REGISTERS</text>
+                        <text class="unit__label" x="332" y="398">Projects</text>
+                    </g>
+                </a>
+
+                <!-- Contact doesn't leave the page: clicking it copies the email address -->
+                <a class="unit unit--bus" href="#contact" aria-label="Contact: copy my email address"
+                   aria-describedby="contact" data-section="contact">
+                    <rect class="unit__shadow" x="230" y="484" width="216" height="80" rx="4" />
+                    <g class="unit__face">
+                        <rect class="unit__body" x="224" y="478" width="216" height="80" rx="4" />
+                        <text class="unit__caption" x="236" y="498">BUS MANAGEMENT UNIT</text>
+                        <text class="unit__label" x="332" y="536">Contact</text>
+                    </g>
+                </a>
+            </svg>
+        </nav>
+
+        <div class="readout">
+            <p class="readout__text">Select a component to explore.</p>
+
+            <p class="readout__contact" id="contact" hidden>
+                <span class="readout__key">Email</span>
+                <span class="email">samuelhorner123[at]gmail.com</span>
+                <span class="readout__hint">Click Contact to copy</span>
+            </p>
+
+            <!-- Announces "copied" to screen readers -->
+            <p class="visually-hidden" role="status" aria-live="polite"></p>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="projects" style="padding-top:0">
-    <div class="wrap grid">
-      <h2>Academic Projects</h2>
-      <div class="list">
-        <!-- Each card is one project. Copy a card to add more. -->
-        <a class="row" href="projects/version-control.html">
-          <h3>Git-like Version Control System</h3>
-          <p>A local version control system designed for Windows co-authored in a group of 5.</p>
-          <span class="tags">C++ &amp; QT</span>
-        </a>
-        <a class="row" href="projects/stelline-compiler.html">
-          <h3>Stelline Compiler</h3>
-          <p>A type-safe compiler written in C.</p>
-          <span class="tags">C</span>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <section id="games" style="padding-top:0">
-    <div class="wrap grid">
-      <h2>Games</h2>
-      <div class="list">
-        <a class="row" href="projects/blasteroids.html">
-          <h3>Blasteroids</h3>
-          <p>A shoot em' up. All music and assets were created entirely by me. AI was used to help develop the Lua code.</p>
-          <span class="tags">Lua &amp; Pico8</span>
-        </a>
-        <a class="row" href="projects/cookie-conquest.html">
-          <h3>Cookie Conquest</h3>
-          <p>A game co-authored in a group of 3 for a game jam. The code was written entirely in Java.</p>
-          <span class="tags">Java</span>
-        </a>
-      </div>
-    </div>
-  </section>
-</main>
-
-<section id="contact" class="brand">
-  <div class="wrap">
-    <div class="grid">
-      <h2>Contact</h2>
-      <div>
-        <p class="big">Have a role or project in mind? Let's talk.</p>
-        <a class="email" href="mailto:samuelhorner123@gmail.com">samuelhorner123@<wbr>gmail.com</a>
-        <ul class="social">
-          <li><a class="btn ghost" href="https://github.com/sam-horner-42">GitHub</a></li>
-          <li><a class="btn ghost" href="https://www.linkedin.com/in/sam-horner-cet">LinkedIn</a></li>
-          <li><a class="btn fill" href="data/Samuel Horner - Resume - 2026.pdf">Resume</a></li>
-        </ul>
-      </div>
-    </div>
-    <footer>&copy; <span id="year">2026</span> Samuel Horner</footer>
-  </div>
-</section>
+    </main>
 </body>
 </html>

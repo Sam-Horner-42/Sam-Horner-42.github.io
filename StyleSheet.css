@@ -1,0 +1,624 @@
+/* ---------- Colours ---------- */
+
+:root {
+  color-scheme: light;
+
+  --page: #f4f2ec;
+  --ink: #1d221c;
+  --ink-soft: #5a6156;
+  --unit-ink: #1d221c;          /* text on the coloured units: dark in both themes */
+
+  /* package and die */
+  --pcb: #5e7038;
+  --pcb-edge: #3d4a22;
+  --contact: #d9c36c;
+  --pin: #d2b25a;
+  --pin-shade: #a1822f;
+  --die: #dfe3cd;
+  --die-line: #b3bb98;
+  --core-line: #4c5e2d;
+
+  /* bus traces */
+  --trace: #de6b3d;
+  --trace-lit: #c4421a;
+  --signal: #ffe7d4;
+
+  /* social tiles and small buttons */
+  --tile: #ebe8df;
+  --tile-edge: #c9c4b4;
+  --tile-shade: #cfcabb;
+
+  /* registers: the green block on the chip and everything on projects.html */
+  --reg-face: #cde2b0;
+  --reg-shade: #97b672;
+  --reg-edge: #81a05d;
+  --reg-tint: #3d5a22;
+
+  /* caches: the yellow blocks on the chip, and work.html and volunteer.html */
+  --cache-face: #f3e4a1;
+  --cache-shade: #c8b158;
+  --cache-edge: #b19a44;
+  --cache-tint: #6b591c;
+
+  /* control unit: the blue block on the chip, and about.html */
+  --cu-face: #c5dbf0;
+  --cu-shade: #8aaacb;
+  --cu-edge: #6f92b6;
+  --cu-tint: #345677;
+
+  /* push button */
+  --switch-body: #2b2e29;
+  --switch-body-shade: #161815;
+  --switch-plate: #c9ccc4;
+  --switch-plate-edge: #9da195;
+  --switch-peg: #262924;
+  --switch-cap: #262924;
+  --switch-cap-hover: #343831;
+  --switch-cap-shade: #0e100d;
+  --switch-leg: #bfc3ba;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --page: #141711;
+  --ink: #e5e8dc;
+  --ink-soft: #9ba292;
+
+  --pcb: #46562b;
+  --pcb-edge: #252e17;
+  --contact: #b8a55c;
+  --pin: #b69a4e;
+  --pin-shade: #7e6830;
+  --die: #262c20;
+  --die-line: #3b4331;
+  --core-line: #93a86a;
+
+  --trace: #cf6a3e;
+  --trace-lit: #ff9259;
+  --signal: #fff2e6;
+
+  --tile: #23281e;
+  --tile-edge: #3c4434;
+  --tile-shade: #0b0d09;
+
+  --reg-face: #b2c898;
+  --reg-shade: #5d7346;
+  --reg-edge: #8fa874;
+
+  --cache-face: #d6c98d;
+  --cache-shade: #7f7038;
+  --cache-edge: #b0a160;
+
+  --cu-face: #a9c1d9;
+  --cu-shade: #4f6680;
+  --cu-edge: #7d9bb9;
+
+  --switch-body: #2e322b;
+  --switch-body-shade: #050604;
+  --switch-plate: #a9ada4;
+  --switch-plate-edge: #7c8076;
+  --switch-cap-hover: #3c4139;
+  --switch-leg: #9fa39a;
+}
+
+
+/* ---------- Page layout ---------- */
+
+html, body { margin: 0; }
+
+body {
+  position: relative;          /* the wire layer is positioned against the body */
+  background: var(--page);
+  color: var(--ink);
+  font-family: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+}
+
+#content {
+  position: relative;
+  z-index: 1;                  /* sits above the wire, so the wire tucks under the chip */
+  min-height: 100vh;
+  min-height: 100svh;          /* ignores the mobile address bar where supported */
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;         /* centres horizontally */
+  justify-content: center;     /* centres vertically */
+  gap: clamp(1rem, 3vh, 1.75rem);
+  padding: clamp(1.5rem, 5vh, 3rem) 1rem;
+}
+
+.name {
+  margin: 0;
+  font-size: clamp(2rem, 1.25rem + 3vw, 3.25rem);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  text-align: center;
+}
+
+/* Up to 600px wide, but shrinks on short screens so the whole chip (and the readout
+   under it) fits without scrolling. 0.95 is the chip's width / height (from the SVG
+   viewBox). The rest of the screen height goes to the page's padding and gaps (about
+   16% of the height, since they grow with it) plus the name and the readout (9rem).
+   The readout uses the same width, so it always lines up with the chip. */
+.chip,
+.readout {
+  width: min(100%, 600px, max(18rem, (84vh - 9rem) * 0.95));
+  width: min(100%, 600px, max(18rem, (84svh - 9rem) * 0.95));
+}
+
+.cpu {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+
+/* ---------- Corners: profile links (left) and the dark mode button (right) ---------- */
+
+.corners {
+  position: absolute;
+  inset: 0 0 auto 0;
+  z-index: 3;                  /* stays on top, even during the zoom into the registers */
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 1.25rem 1.5rem;
+  pointer-events: none;        /* only the links and button themselves take clicks */
+}
+
+.corners > * { pointer-events: auto; }
+
+.socials {
+  display: flex;
+  gap: 0.75rem;
+  padding-top: 0.25rem;
+}
+
+.social {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  box-sizing: border-box;
+  border: 1px solid var(--tile-edge);
+  border-radius: 6px;
+  background: var(--tile);
+  box-shadow: 4px 4px 0 var(--tile-shade);
+  color: var(--ink);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.social svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  fill: currentColor;
+}
+
+.social:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--tile-shade);
+}
+
+.social:active {
+  transform: translate(3px, 3px);
+  box-shadow: 1px 1px 0 var(--tile-shade);
+  transition-duration: 0.05s;
+}
+
+/* A little extra space separates Home from the profile links.
+   Its icon is an outline, so a thin stroke brings it up to the weight of the logos. */
+.social--home { margin-right: 0.5rem; }
+.social--home svg { stroke: currentColor; stroke-width: 0.6; }
+
+.social:focus-visible,
+.power-switch:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+
+
+/* ---------- The push button ---------- */
+
+.power-switch {
+  display: block;
+  width: 4rem;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  cursor: pointer;
+}
+
+.switch { display: block; width: 100%; height: auto; }
+
+.switch__leg        { fill: var(--switch-leg); }
+.switch__body-shade { fill: var(--switch-body-shade); }
+.switch__body       { fill: var(--switch-body); }
+.switch__peg        { fill: var(--switch-peg); }
+.switch__cap-shade  { fill: var(--switch-cap-shade); }
+
+.switch__plate {
+  fill: var(--switch-plate);
+  stroke: var(--switch-plate-edge);
+  stroke-width: 1;
+}
+
+.switch__cap-top {
+  fill: var(--switch-cap);
+  transition: fill 0.15s;
+}
+
+.switch__cap-shine {
+  fill: none;
+  stroke: #ffffff;
+  stroke-opacity: 0.25;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.switch__cap { transition: transform 0.12s ease; }
+
+.power-switch:hover .switch__cap-top { fill: var(--switch-cap-hover); }
+
+/* Pressed: the cap sinks onto its shadow */
+.power-switch:active .switch__cap,
+.power-switch.is-pressed .switch__cap {
+  transform: translate(2.5px, 2.5px);
+  transition-duration: 0.04s;
+}
+
+
+/* ---------- The wire from the button to the chip ---------- */
+
+.wire-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.wire,
+.wire-pulse {
+  fill: none;
+  stroke-linejoin: round;
+}
+
+.wire {
+  stroke: var(--trace);
+  stroke-linecap: round;
+}
+
+.wire-pulse,
+.input-pulse {
+  stroke: var(--trace-lit);
+  opacity: 0;                  /* theme.js runs a pulse along these when the button is pressed */
+}
+
+
+/* ---------- Readout under the chip ----------
+   A two-line character display wired up under the chip: a dark screen in a
+   circuit-board frame, with bright text and a blinking cursor so it's easy to spot.
+   It's the same width as the chip (see .chip above). */
+
+.readout {
+  --screen: #111a0e;
+  --screen-text: #b8f07a;
+  --screen-dim: #84b45a;
+
+  box-sizing: border-box;
+  min-height: 5rem;            /* room for two lines, so the layout never jumps */
+  display: grid;
+  place-items: center;
+  padding: 0.6rem 1rem;
+  border: 6px solid var(--pcb);
+  border-radius: 8px;
+  background: var(--screen);
+  box-shadow: inset 0 0 0 1px #000000, 5px 5px 0 var(--pcb-edge);
+  font: 500 1rem/1.45 "IBM Plex Mono", ui-monospace, monospace;
+  color: var(--screen-text);
+  text-align: center;
+}
+
+.readout p { margin: 0; }
+
+.readout [hidden] { display: none; }
+
+/* A blinking block cursor after whatever line is showing */
+.readout__text::after,
+.readout__hint::after {
+  content: "";
+  display: inline-block;
+  width: 0.55em;
+  height: 1.05em;
+  margin-left: 0.25em;
+  vertical-align: -0.15em;
+  background: currentColor;
+  animation: cursor-blink 1.1s steps(1) infinite;
+}
+
+@keyframes cursor-blink {
+  50% { opacity: 0; }
+}
+
+/* The email on the first line, the hint on the second */
+.readout__contact {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: baseline;
+  gap: 0.15rem 0.7rem;
+}
+
+.readout__key {
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--screen-dim);
+}
+
+.readout__hint {
+  flex-basis: 100%;
+  color: var(--screen-dim);
+}
+
+/* "Copied to clipboard" lights up in reverse, so there's no missing it */
+.readout__hint.is-done {
+  flex-basis: auto;
+  padding: 0 0.4em;
+  border-radius: 3px;
+  background: var(--screen-text);
+  color: var(--screen);
+}
+
+.readout__hint.is-done::after { display: none; }
+
+/* A quick flash of the screen when the email is copied */
+.readout.is-flashing { animation: screen-flash 0.6s ease-out; }
+
+@keyframes screen-flash {
+  from { background-color: #2f4a1d; }
+}
+
+/* Text for screen readers only */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+
+/* ---------- Chip: package, die and core ---------- */
+
+.pcb       { fill: var(--pcb); }
+.pcb-edge  { fill: var(--pcb-edge); }
+.contact   { fill: var(--contact); }
+.pin       { fill: var(--pin); }
+.pin-shade { fill: var(--pin-shade); }
+.pad       { fill: var(--pin); }
+
+.die {
+  fill: var(--die);
+  stroke: var(--die-line);
+  stroke-width: 1.5;
+}
+
+.core {
+  fill: none;
+  stroke: var(--core-line);
+  stroke-width: 2.5;
+}
+
+.core-tag-bg { fill: var(--die); }
+
+.core-tag {
+  font: 500 12px "IBM Plex Mono", ui-monospace, monospace;
+  letter-spacing: 0.1em;
+  fill: var(--core-line);
+}
+
+
+/* ---------- Bus traces ---------- */
+
+.trace,
+.input-trace,
+.input-pulse {
+  fill: none;
+  stroke-linejoin: round;
+}
+
+.trace {
+  stroke: var(--trace);
+  stroke-width: 7;
+  transition: stroke 0.2s;
+}
+
+.trace.is-lit { stroke: var(--trace-lit); }
+
+.input-trace {
+  stroke: var(--trace);
+  stroke-width: 5;
+}
+
+.input-pulse { stroke-width: 7.5; }
+
+/* Moving dashes drawn over a lit trace (the copies are added by script.js) */
+.signal {
+  fill: none;
+  stroke: var(--signal);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-dasharray: 3 13;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.trace.is-lit + .signal {
+  opacity: 1;
+  animation: signal-flow 0.6s linear infinite;
+}
+
+@keyframes signal-flow {
+  to { stroke-dashoffset: -16; }
+}
+
+
+/* ---------- Units: the clickable parts of the chip ---------- */
+
+.unit--control   { --face: var(--cu-face); --shade: var(--cu-shade); --edge: var(--cu-edge); --tint: var(--cu-tint); }
+.unit--alu       { --face: #f3c5cb; --shade: #cf8e98; --edge: #bc7984; --tint: #7f3c48; }
+.unit--cache     { --face: var(--cache-face); --shade: var(--cache-shade); --edge: var(--cache-edge); --tint: var(--cache-tint); }
+.unit--registers { --face: var(--reg-face); --shade: var(--reg-shade); --edge: var(--reg-edge); --tint: var(--reg-tint); }
+.unit--bus       { --face: #b4c2ec; --shade: #7586c2; --edge: #6577b3; --tint: #2c3a72; }
+
+/* Slightly dimmer faces at night so they don't glare against the dark die */
+[data-theme="dark"] .unit--alu       { --face: #d8aab0; --shade: #855a61; --edge: #b78890; }
+[data-theme="dark"] .unit--bus       { --face: #9eaad4; --shade: #4e5a86; --edge: #7f8cbc; }
+
+.unit { outline: none; }
+
+.unit__shadow { fill: var(--shade); }
+
+.unit__body {
+  fill: var(--face);
+  stroke: var(--edge);
+  stroke-width: 1.25;
+}
+
+.unit__face { transition: transform 0.15s ease; }
+
+.unit__caption {
+  font: 500 13px "IBM Plex Mono", ui-monospace, monospace;
+  letter-spacing: 0.06em;
+  fill: var(--tint);
+}
+
+.unit__label {
+  font: 500 24px "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  text-anchor: middle;
+  fill: var(--unit-ink);
+}
+
+/* Lift on hover, press down on click */
+.unit:hover .unit__face,
+.unit:focus-visible .unit__face {
+  transform: translate(-3px, -3px);
+}
+
+.unit:active .unit__face {
+  transform: translate(4px, 4px);
+  transition-duration: 0.05s;
+}
+
+/* Clear outline for keyboard users */
+.unit:focus-visible .unit__body {
+  stroke: var(--unit-ink);
+  stroke-width: 3;
+}
+
+
+/* ---------- Zooming into and out of a section ----------
+   Going in: the chip zooms into a block (the green registers or a yellow cache) until the
+   screen is solid in its colour, then the section's page starts on that colour and shrinks
+   it onto its contents. Coming back out runs the same steps in reverse.
+   --cover-color is set by the page or the script; the registers' green is the default. */
+
+.zoom-cover {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 2;                  /* above the page, below the corner links */
+  background: var(--cover-color, var(--reg-face));
+  pointer-events: none;
+}
+
+.zoom-cover.is-visible,
+.is-entering .zoom-cover,
+.is-returning .zoom-cover {
+  display: block;
+}
+
+/* Coming back to the home page starts on the colour of the block you left
+   (the registers' green is the default) */
+[data-returning="work"] .zoom-cover,
+[data-returning="volunteer"] .zoom-cover {
+  --cover-color: var(--cache-face);
+}
+
+[data-returning="about"] .zoom-cover {
+  --cover-color: var(--cu-face);
+}
+
+/* A page that starts on the colour never leaves it up, even if its script fails */
+.is-entering .zoom-cover,
+.is-returning .zoom-cover {
+  animation: cover-safety 0s 3s forwards;
+}
+
+@keyframes cover-safety { to { visibility: hidden; } }
+
+/* Back on the home page, the push button and its wire fade in as the chip zooms out */
+.is-returning .power-switch,
+.is-returning .wire-layer {
+  opacity: 0;
+}
+
+
+/* ---------- Theme change: the new theme spreads out from the control unit ---------- */
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+
+/* ---------- Small screens and reduced motion ---------- */
+
+@media (max-width: 640px) {
+  #content { padding-top: 5.5rem; }      /* clears the corner links and button */
+
+  .corners { padding: 1rem; }
+  .socials { gap: 0.6rem; }
+  .social { width: 2.25rem; height: 2.25rem; }
+  .power-switch { width: 3rem; }
+
+  .readout { font-size: 0.9rem; }
+}
+
+/* The small captions get too small to read on phones, so only the section names stay */
+@media (max-width: 440px) {
+  .unit__caption,
+  .core-tag,
+  .core-tag-bg {
+    display: none;
+  }
+
+  /* With the captions gone, move the single-line labels back to the middle of their blocks */
+  .unit:not(.unit--cache) .unit__label {
+    transform: translateY(-9px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .unit__face,
+  .trace,
+  .signal,
+  .social,
+  .switch__cap {
+    transition: none;
+  }
+
+  .trace.is-lit + .signal,
+  .readout__text::after,
+  .readout__hint::after,
+  .readout.is-flashing {
+    animation: none;
+  }
+}

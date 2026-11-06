@@ -1,0 +1,262 @@
+/* ---------- Cache pages (work.html and volunteer.html) ----------
+   Each role is a line in an L1 cache: line number, valid bit, tag (who) and data (what).
+   The page container, title block and the CPU panel the cache sits in (.die-panel) are
+   in section.css. Uses the colour variables from StyleSheet.css, so it follows dark mode too. */
+
+
+/* ---------- The cache: a yellow block like the caches on the chip ---------- */
+
+.cache {
+  --placeholder-ink: var(--cache-tint);
+  --caption-ink: var(--cache-tint);
+  position: relative;
+  overflow: hidden;            /* keeps the write flash inside the rounded corners */
+  border: 1.5px solid var(--cache-edge);
+  border-radius: 6px;
+  background: var(--cache-face);
+  box-shadow: 6px 6px 0 var(--cache-shade);
+  color: var(--unit-ink);
+}
+
+/* "L1 DATA CACHE" or "L1 INSTRUCTION CACHE", printed across the top */
+.cache__caption {
+  padding: 0.7rem 1.1rem 0.6rem;
+  border-bottom: 1.5px solid var(--cache-edge);
+}
+
+/* Four columns: line number, valid bit, tag, data */
+.cache__head,
+.line {
+  display: grid;
+  grid-template-columns: 3.5rem 2.75rem minmax(12rem, 1fr) minmax(0, 2fr);
+}
+
+.cache__head {
+  border-bottom: 1.5px solid var(--cache-edge);
+  font: 500 0.7rem "IBM Plex Mono", ui-monospace, monospace;
+  letter-spacing: 0.12em;
+  color: var(--cache-tint);
+}
+
+.cache__head span { padding: 0.6rem 1.1rem; }
+
+.cache__head span:nth-child(-n + 2) {
+  padding-inline: 0;
+  border-right: 1.5px solid var(--cache-edge);
+  text-align: center;
+}
+
+.cache__head span:nth-child(3) { border-right: 1.5px solid var(--cache-edge); }
+
+.cache__lines {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.line { position: relative; }
+.line + .line { border-top: 1.5px solid var(--cache-edge); }
+
+.line__index,
+.line__valid {
+  display: flex;
+  justify-content: center;
+  padding-top: 1.15rem;
+  border-right: 1.5px solid var(--cache-edge);
+  font: 500 0.85rem "IBM Plex Mono", ui-monospace, monospace;
+  color: var(--cache-tint);
+}
+
+/* The valid bit: 0 until the line has been loaded, then 1 */
+.line__bit {
+  display: grid;
+  place-items: center;
+  width: 1.4rem;
+  height: 1.4rem;
+  border: 1.5px solid var(--cache-edge);
+  border-radius: 3px;
+  font-size: 0.8rem;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.line.is-valid .line__bit {
+  border-color: var(--cache-tint);
+  background: var(--cache-tint);
+  color: var(--cache-face);
+}
+
+
+/* ---------- Tag: who it was with ---------- */
+
+.line__tag {
+  min-width: 0;
+  padding: 1rem 1.1rem 1.15rem;
+  border-right: 1.5px solid var(--cache-edge);
+}
+
+/* Logos sit on a white label, since they're designed for light backgrounds */
+.line__logo {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 9.5rem;
+  height: 3.6rem;
+  padding: 0.45rem 0.6rem;
+  overflow: hidden;
+  border: 1.5px solid var(--cache-edge);
+  border-radius: 5px;
+  background: #ffffff;
+}
+
+/* Fills the label's inside, and "contain" fits any shape of logo without cropping it */
+.line__logo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.line__org {
+  margin: 0.7rem 0 0.1rem;
+  font-size: 1.05rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.line__site {
+  font: 0.8rem/1.4 "IBM Plex Mono", ui-monospace, monospace;
+  color: inherit;
+  overflow-wrap: anywhere;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.line__site svg {
+  width: 0.75em;
+  height: 0.75em;
+  margin-left: 0.3em;
+  fill: currentColor;
+  vertical-align: -0.05em;
+}
+
+.line__site:focus-visible {
+  outline: 2px solid var(--unit-ink);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+
+/* ---------- Data: the role itself ---------- */
+
+.line__data {
+  min-width: 0;
+  padding: 1rem 1.25rem 1.15rem;
+}
+
+.line__data p { margin: 0; }
+
+.line__role {
+  font-size: 1.05rem;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.line .line__meta {
+  margin-top: 0.2rem;
+  font: 0.78rem/1.5 "IBM Plex Mono", ui-monospace, monospace;
+  color: var(--cache-tint);
+}
+
+.line .line__about {
+  margin-top: 0.55rem;
+  font-size: 0.975rem;
+  line-height: 1.55;
+}
+
+
+/* ---------- Loading a line ----------
+   Until a line is valid its tag and data are empty. Then they're written in,
+   with a quick flash, the same way the registers are. Only the contents move,
+   so the column lines stay put. */
+
+.line:not(.is-valid) .line__tag > *,
+.line:not(.is-valid) .line__data > * {
+  opacity: 0;
+}
+
+.line.is-valid .line__tag > *,
+.line.is-valid .line__data > * {
+  animation: write-in 0.45s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+
+.line.is-valid .line__data > * { animation-delay: 80ms; }
+
+.line.is-valid::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #ffffff;
+  opacity: 0;
+  pointer-events: none;
+  animation: write-flash 0.6s ease-out;
+}
+
+
+/* ---------- Smaller screens: each line becomes a card ---------- */
+
+@media (max-width: 700px) {
+
+  .cache__head { display: none; }
+
+  .line {
+    grid-template-columns: auto auto minmax(0, 1fr);
+    grid-template-areas:
+      "index valid ."
+      "tag   tag   tag"
+      "data  data  data";
+  }
+
+  .line__index,
+  .line__valid {
+    align-items: center;
+    padding: 0.9rem 0 0 1rem;
+    border-right: 0;
+  }
+
+  .line__index { grid-area: index; }
+  .line__valid { grid-area: valid; padding-left: 0.6rem; }
+
+  /* logo on the left, name and link beside it */
+  .line__tag {
+    grid-area: tag;
+    display: grid;
+    grid-template-columns: 7rem minmax(0, 1fr);
+    column-gap: 0.9rem;
+    align-items: center;
+    padding: 0.75rem 1rem 0;
+    border-right: 0;
+  }
+
+  .line__logo {
+    grid-row: span 2;
+    height: 3rem;
+  }
+
+  .line__org { margin: 0; align-self: end; }
+  .line__site { align-self: start; }
+
+  .line__data {
+    grid-area: data;
+    padding: 0.8rem 1rem 1.1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .line.is-valid .line__tag > *,
+  .line.is-valid .line__data > * {
+    animation: none;
+  }
+
+  .line.is-valid::before { display: none; }
+  .line__bit { transition: none; }
+}

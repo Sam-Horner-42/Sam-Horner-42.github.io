@@ -1,0 +1,85 @@
+/* ---------- Shared by the section pages (projects, work, volunteer and about) ----------
+   The page container, the title block, the die-coloured panel, the captions printed
+   inside each component, placeholders, and the animations for data being written in.
+   Uses the colour variables from StyleSheet.css, so it follows dark mode too. */
+
+.section-view {
+  position: relative;
+  z-index: 1;                  /* its own layer, so the zoom cover can sit over all of it */
+  box-sizing: border-box;
+  max-width: 68rem;
+  margin: 0 auto;
+  padding: 2.25rem 1.5rem 4rem;
+}
+
+.page-title {
+  margin: 0;
+  text-align: center;
+  font-size: clamp(2rem, 1.4rem + 2vw, 2.75rem);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.page-hint {
+  margin: 0.6rem 0 0;
+  text-align: center;
+  font: 0.875rem/1.5 "IBM Plex Mono", ui-monospace, monospace;
+  color: var(--ink-soft);
+}
+
+/* A die-coloured CPU panel that the page's component sits in
+   (the work, volunteer and about pages; projects has its own .cpu-box) */
+.die-panel {
+  position: relative;
+  margin-top: 2rem;
+  padding: 2rem;
+  border: 1.5px solid var(--die-line);
+  border-radius: 10px;
+  background: var(--die);
+}
+
+/* The component's name, printed inside it like the labels on the chip
+   (e.g. "L1 DATA CACHE"). Each component sets --caption-ink to its own darker shade. */
+.component-caption {
+  margin: 0;
+  font: 500 0.72rem "IBM Plex Mono", ui-monospace, monospace;
+  letter-spacing: 0.12em;
+  color: var(--caption-ink, var(--ink-soft));
+}
+
+/* Text in [square brackets] in the data files still needs filling in.
+   Pages can set --placeholder-ink to match the block it sits on. */
+.placeholder {
+  color: var(--placeholder-ink, var(--reg-tint));
+  font-style: italic;
+  opacity: 0.85;
+}
+
+
+/* ---------- Data arriving over the bus ---------- */
+
+@keyframes bus-flow-down { to { background-position: 0 13px; } }
+@keyframes bus-flow-left { to { background-position: -13px 0; } }
+
+/* Each value slides in as it's written... */
+@keyframes write-in {
+  from { opacity: 0; transform: translateX(-8px); }
+}
+
+/* ...with a quick flash over the block being written */
+@keyframes write-flash {
+  from { opacity: 0.45; }
+  to   { opacity: 0; }
+}
+
+
+/* ---------- Smaller screens ---------- */
+
+@media (max-width: 760px) {
+  .section-view { padding: 5.5rem 1rem 3rem; }   /* clears the corner links */
+}
+
+@media (max-width: 700px) {
+  .die-panel { padding: 1.25rem 1rem; }
+}

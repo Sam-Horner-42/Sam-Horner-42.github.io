@@ -1,0 +1,64 @@
+/* ---------- About page (about.html) ----------
+   The paragraph sits inside a blue block, like the control unit on the chip.
+   The page container, title and the CPU panel (.die-panel) are in section.css.
+   Uses the colour variables from StyleSheet.css, so it follows dark mode too. */
+
+/* A narrower panel, so the paragraph keeps a comfortable line length */
+.about-panel {
+  max-width: 48rem;
+  margin-inline: auto;
+}
+
+.control-unit {
+  --caption-ink: var(--cu-tint);
+  position: relative;
+  overflow: hidden;            /* keeps the write flash inside the rounded corners */
+  padding: 1.3rem 1.9rem 1.75rem;
+  border: 1.5px solid var(--cu-edge);
+  border-radius: 6px;
+  background: var(--cu-face);
+  box-shadow: 6px 6px 0 var(--cu-shade);
+  color: var(--unit-ink);
+}
+
+/* "CONTROL UNIT", in the top corner like the label on the chip */
+.control-unit__caption { margin-bottom: 0.9rem; }
+
+.about__text {
+  margin: 0;
+  font-size: 1.1rem;
+  line-height: 1.7;
+}
+
+
+/* ---------- Writing the paragraph in ----------
+   about.js splits the paragraph into sentences and writes them in one after another,
+   with a quick flash over the block, the same way the registers are written. */
+
+.control-unit.is-writing .about__sentence {
+  animation: write-in 0.5s ease-out both;
+  animation-delay: calc(var(--i, 0) * 70ms + 100ms);
+}
+
+.control-unit.is-writing::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #ffffff;
+  opacity: 0;
+  pointer-events: none;
+  animation: write-flash 0.6s ease-out;
+}
+
+
+/* ---------- Smaller screens and reduced motion ---------- */
+
+@media (max-width: 700px) {
+  .control-unit { padding: 1.2rem 1.15rem 1.3rem; }
+  .about__text { font-size: 1.02rem; line-height: 1.65; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .control-unit.is-writing .about__sentence { animation: none; }
+  .control-unit.is-writing::before { display: none; }
+}
