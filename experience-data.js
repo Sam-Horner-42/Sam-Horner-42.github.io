@@ -18,7 +18,7 @@ const WORK = [
         org: "Spiritleaf",
         logo: "media/logos/spiritleaf.png",
         site: "https://spiritleaf.ca/",
-        role: "Concierge/Budtender",
+        role: "Concierge",
         dates: "Feb 2023 – Oct 2026",
         place: "Ottawa, ON",
         about: "Learned about proper regulatory practices regarding legal cannabis sale and consumption. ",
