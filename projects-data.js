@@ -100,7 +100,7 @@ const PROJECTS = [
         ],
         buildNote: "Needs a Java JDK. On Windows, use bin;src instead of bin:src.",
 
-        role: "Main contributor, with 176 of the commits, working with one teammate. I was responsible for defining the level data, and coding the item and dice logic and then debugging the link between the backend and frontend.",
+        role: "Main contributor, with 176 of the commits, working with two teammates. I was responsible for defining the level data, and coding the item and dice logic and then debugging the link between the backend and frontend.",
 
         stack: {
             languages: ["Java"],
