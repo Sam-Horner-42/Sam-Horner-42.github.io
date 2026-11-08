@@ -129,6 +129,9 @@ function setTheme(theme) {
 
 // Light a path up from its start to its end
 function sendPulse(path, duration) {
+    // Clear away the last press's pulse first, in case it's still fading out
+    path.getAnimations().forEach((animation) => animation.cancel());
+
     const length = path.getTotalLength();
     path.style.strokeDasharray = length;
     path.style.opacity = 1;
@@ -139,12 +142,11 @@ function sendPulse(path, duration) {
     ).finished;
 }
 
+// Fade a pulse out. The faded-out pulse is left in place rather than tidied up once
+// the fade ends: if the button is pressed again mid-fade, a late tidy-up would cancel
+// the new press's pulse. sendPulse clears it away when the next press starts instead.
 function clearPulse(path) {
-    path.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 400, fill: "forwards" })
-        .finished.then(() => {
-            path.style.opacity = 0;
-            path.getAnimations().forEach((animation) => animation.cancel());
-        });
+    path.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 400, fill: "forwards" });
 }
 
 // Switch theme with a circle growing out from (x, y), where supported
@@ -184,21 +186,25 @@ themeSwitch.addEventListener("click", async (event) => {
 
     const nextTheme = root.dataset.theme === "dark" ? "light" : "dark";
 
-    if (hasWire) {
-        if (!reduceMotion.matches) {
-            await sendPulse(wirePulse, 380);
-            await sendPulse(inputPulse, 140);
+    // `finally` frees the button up again even if something goes wrong mid-switch,
+    // so one error can't leave it stuck and ignoring every press after
+    try {
+        if (hasWire) {
+            if (!reduceMotion.matches) {
+                await sendPulse(wirePulse, 380);
+                await sendPulse(inputPulse, 140);
+            }
+
+            // Tell the chip the control unit has received the signal (script.js lights it up)
+            document.dispatchEvent(new CustomEvent("signal-received"));
+
+            await revealTheme(nextTheme, ...centreOf(controlUnit));
+            clearPulse(wirePulse);
+            clearPulse(inputPulse);
+        } else {
+            await revealTheme(nextTheme, ...centreOf(themeSwitch));
         }
-
-        // Tell the chip the control unit has received the signal (script.js lights it up)
-        document.dispatchEvent(new CustomEvent("signal-received"));
-
-        await revealTheme(nextTheme, ...centreOf(controlUnit));
-        clearPulse(wirePulse);
-        clearPulse(inputPulse);
-    } else {
-        await revealTheme(nextTheme, ...centreOf(themeSwitch));
+    } finally {
+        switching = false;
     }
-
-    switching = false;
 });
